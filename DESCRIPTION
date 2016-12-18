@@ -1,9 +1,16 @@
 Package: ZOIP
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.3.1)
-License: What license is it under?
+Title: Distribucion ZOIP
+Description: La funcion ZOIP() define las distribuciones para datos
+    proporcionales inflados en ceros y unos mas conocidas, como la distribucion beta
+    y simplex, ademas permite que se tengan distintas parametrizaciones.La funcion
+    ZOIP() posee 4 parametros dos de ellos es la porporcion de ceros y unos que
+    quiere que posea la distribucion para datos proporcionales de su eleccion.
+Version: 0.1
+Author: Juan Camilo Diaz Zapata
+Maintainer: Juan Camilo Diaz Zapata <jucdiazza@unal.edu.co>
+Depends:
+    simplexreg
+License: >GPL-2
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 5.0.1
