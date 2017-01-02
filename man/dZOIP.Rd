@@ -17,25 +17,27 @@ dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', l
 
 \item{p1}{parametro de proporcion de unos}
 
-\item{family}{eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. @param log logico; si TRUE, las probabilidades de p estaran dadas como log(p).}
+\item{family}{eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex.}
+
+\item{log}{logico; si TRUE, las probabilidades de p estaran dadas como log(p).}
 }
 \description{
 La funcion dZOIP define la funcion de densidad de probabilidad de la distribucion ZOIP.
 }
 \details{
 x tiene distribucion ZOIP con parametros de forma "mu", de escala "sigma", de proporcion de ceros "p0" y de proporcion de unos "p1",
-si tiene densidad: p0 si x=0, p1 si x=1, expression(1-p0-p1.f(x,mu,sigma)) si 0<x<1.
+si tiene densidad: p0 si x=0, p1 si x=1, (1-p0-p1)f(x;mu,sigma)) si 0<x<1.
 
-donde p0 ≥ 0 representa la probabilidad que y = 0, p1 ≥ 0 representa la probabilidad
-de que y = 1, 0 ≤ p0 + p1 ≤ 1 y f(y; μ, sigma) representa algunas de las funciones de
+donde p0 ≥ 0 representa la probabilidad que x = 0, p1 ≥ 0 representa la probabilidad
+de que x = 1, 0 ≤ p0 + p1 ≤ 1 y f(x; μ, sigma) representa algunas de las funciones de
 densidad de probabilidad para datos proporcionales, como la distribucion beta con sus diferentes parametrizaciones
 y la distribucion simplex.
 
 Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos el cual tiene una funcion de distribucion beta
-f(y; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1.
-ily='F-Cdis' tribucion Beta parametrizacion Ferrari y Cribari-Neto, O donde sigma=phiriphi es un parametro de precision.
+f(x; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion
+family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, O donde sigma=phi, phi es un parametro de precision.
 family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
-family=mplex' distribucion simplex.
+family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
 }
 \examples{
 dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)

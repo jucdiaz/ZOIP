@@ -25,6 +25,23 @@ qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,
 \description{
 La funcion qZOIP define la funcion cuantil de la distribucion ZOIP.
 }
+\details{
+La funcion dZOIP define la funcion de densidad de probabilidad de la distribucion ZOIP.
+
+x tiene distribucion ZOIP con parametros de forma "mu", de escala "sigma", de proporcion de ceros "p0" y de proporcion de unos "p1",
+si tiene densidad: p0 si x=0, p1 si x=1, (1-p0-p1)f(x;mu,sigma)) si 0<x<1.
+
+donde p0 ≥ 0 representa la probabilidad que x = 0, p1 ≥ 0 representa la probabilidad
+de que x = 1, 0 ≤ p0 + p1 ≤ 1 y f(x; μ, sigma) representa algunas de las funciones de
+densidad de probabilidad para datos proporcionales, como la distribucion beta con sus diferentes parametrizaciones
+y la distribucion simplex.
+
+Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos el cual tiene una funcion de distribucion beta
+f(x; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion
+family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, O donde sigma=phi, phi es un parametro de precision.
+family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
+family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
+}
 \examples{
 qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
 qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
