@@ -202,7 +202,6 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   return(Result)
 }
 
-# Formula.ZOIP --------------------------------------------------------------------------
 Formula.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,link,family){
 
   var.mu.p<-attr(terms(formula.mu),'term.labels')
@@ -275,7 +274,6 @@ Formula.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,link,famil
   return(F_final)
 }
 
-##################fit.ZOIP---------------------------------------------------------------------
 
 fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,family,fg){
   var.mu.p<-attr(terms(formula.mu),'term.labels')
@@ -313,8 +311,6 @@ fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,fami
   return(opt)
 
 }
-
-#####ll.ZOIP---------------------------------------------------------
 
 ll.ZOIP<-function(X,y,fg,data,family){
   eval(parse(text=fg))
