@@ -103,7 +103,6 @@ summary.ZOIP<-function(mod){
 
 }
 
-#Print.ZOIP-------------------------------------
 print.ZOIP<-function(mod){
 
   mod$nparm[mod$Vec_Bool==T]<--1

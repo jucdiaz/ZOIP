@@ -169,6 +169,9 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
     i=i+1
   }
 
+  Yi<-paste0('data$',rownames(attr(terms(formula.mu),'factors'))[1])
+  Yi<-eval(parse(text=Yi))
+
   HM<-numDeriv::hessian(func=ll.ZOIP,x=opt$par,y=Yi,fg=fg,data=data,family=family)
 
   i=1
