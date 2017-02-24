@@ -11,7 +11,7 @@
 #'y la distribucion simplex.
 #'
 #'Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008) el cual tiene una funcion de distribucion beta
-#'f(x; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
+#'. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
 #'family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto (2004), donde sigma=phi, phi es un parametro de precision.
 #'family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
 #'family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
@@ -34,6 +34,21 @@
 #' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
 #' pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
 #' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex',log = FALSE)
+#'
+#' pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 = 0.2,family='R-S',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0, p1 = 0.2,family='F-C',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0, p1 = 0.2,family='Original',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0, p1 = 0.2,family='Simplex',log = FALSE)
+#'
+#' pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0,family='R-S',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0,family='F-C',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0,family='Original',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0,family='Simplex',log = FALSE)
+#'
+#' pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 = 0,family='R-S',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='F-C',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0, p1 = 0,family='Original',log = FALSE)
+#' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='Simplex',log = FALSE)
 
 pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',
                  lower.tail = TRUE, log.p = FALSE)
@@ -48,12 +63,21 @@ pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     stop(paste("sigma must be between 0 and 1", "\n", ""))
   if (any(family != 'R-S') && any(sigma <= 0))
     stop(paste("sigma must greated than 0", "\n", ""))
-  if (any(p0 <= 0) | any(p0 >= 1))
+  if (any(p0>=1))
+    stop(paste("p0 must be lower than 1", "\n", ""))
+  if (any(p1>=1))
+    stop(paste("p1 must be lower than 1", "\n", ""))
+  if (any(p0+p1 < 0) | any(p0+p1 >= 1))
+    stop(paste("p0+p1 must be between 0 and 1", "\n", ""))
+  if (any(p0 < 0) | any(p0 > 1))
     stop(paste("p0 must be between 0 and 1", "\n", ""))
-  if (any(p1 <= 0) | any(p1 >= 1))
+  if (any(p1 < 0) | any(p1 > 1))
     stop(paste("p1 must be between 0 and 1", "\n", ""))
   if (any(q < 0) | any(q > 1))
     stop(paste("y must be 0<=y<=1, i.e. 0 to 1 inclusively",
+               "\n", ""))
+  if ((any(q==0) | any(q==1)) && any(p0==0) && any(p1==0) )
+    stop(paste("y must be 0<y<1, desity is not inflated",
                "\n", ""))
   if(family == 'R-S'){
     a <- mu * (1 - sigma^2)/(sigma^2)
@@ -65,17 +89,24 @@ pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     a <- mu
     b <- sigma
   }
-
-  nu <- p0/(1-p0-p1)
-  tau <- p1/(1-p0-p1)
-
+  if(p0>0 || p1>0){
+    nu <- p0/(1-p0-p1)
+    tau <- p1/(1-p0-p1)
+  }else if(p0==0 && p1==0){
+    nu<-0
+    tau<-0
+  }
   if(family != 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + pbeta(q, shape1 = a,
                                                                     shape2 = b, ncp = 0, lower.tail = TRUE, log.p = FALSE),
                                         0)}
   if(family == 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + psimplex(q, mu=mu, sig=sigma),0)}
   cdf <- ifelse((q == 0), nu, cdf)
   cdf <- ifelse((q == 1), 1 + nu + tau, cdf)
-  cdf <- cdf/(1 + nu + tau)
+  if(p0>0 && p1>0){
+    cdf <- cdf/(1 + nu + tau)
+  }else if (p0>0 && p1==0){cdf <- cdf/(1 + nu)
+  }else if (p0==0 && p1>0){cdf <- cdf/(1 + tau)
+  }else if (p0==0 && p1==0){ cdf <- cdf}
   if (lower.tail == TRUE)
     cdf <- cdf
   else cdf = 1 - cdf

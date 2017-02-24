@@ -11,7 +11,7 @@
 #'y la distribucion simplex.
 #'
 #'Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008) el cual tiene una funcion de distribucion beta
-#'f(x; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
+#'. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
 #'family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto (2004), donde sigma=phi, phi es un parametro de precision.
 #'family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
 #'family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
@@ -33,6 +33,21 @@
 #' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
 #' qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
 #' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex',log = FALSE)
+#'
+#' qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0,family='R-S',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0,family='F-C',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0,family='Original',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0,family='Simplex',log = FALSE)
+#'
+#' qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0, p1 = 0.2,family='R-S',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0, p1 = 0.2,family='F-C',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0, p1 = 0.2,family='Original',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0, p1 = 0.2,family='Simplex',log = FALSE)
+#'
+#' qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0, p1 = 0,family='R-S',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='F-C',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0, p1 = 0,family='Original',log = FALSE)
+#' qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='Simplex',log = FALSE)
 
 
 qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',
@@ -47,10 +62,14 @@ qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     stop(paste("sigma must be between 0 and 1", "\n", ""))
   if (any(family != 'R-S') && any(sigma <= 0))
     stop(paste("sigma must greated than 0", "\n", ""))
-  if (any(p0 <= 0) | any(p0 >= 1))
+  if (any(p0>=1))
+    stop(paste("p0 must be lower than 1", "\n", ""))
+  if (any(p1>=1))
+    stop(paste("p1 must be lower than 1", "\n", ""))
+  if (any(p0+p1 < 0) | any(p0+p1 >= 1))
+    stop(paste("p0+p1 must be between 0 and 1", "\n", ""))
+  if (any(p0 < 0) | any(p0 > 1))
     stop(paste("p0 must be between 0 and 1", "\n", ""))
-  if (any(p1 <= 0) | any(p1 >= 1))
-    stop(paste("p1 must be between 0 and 1", "\n", ""))
   if (any(p < 0) | any(p > 1))
     stop(paste("p must be between 0 and 1", "\n", ""))
   if (log.p == TRUE)
@@ -71,18 +90,48 @@ qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     b <- sigma
   }
 
-  nu <- p0/(1-p0-p1)
-  tau <- p1/(1-p0-p1)
+  if(p0>0 || p1>0){
+    nu <- p0/(1-p0-p1)
+    tau <- p1/(1-p0-p1)
+  }else if(p0==0 && p1==0){
+    nu<-0
+    tau<-0
+  }
+
+
   if(family != 'Simplex'){
-    suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
-                                 0, qbeta((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
-                                          shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE)))
+    if(p0>0 && p1>0){
+      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
+                                   0, qbeta((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
+                                            shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE)))
+    }else if(p0>0 && p1==0){
+      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, qbeta((p -
+                                                                     (nu/(1 + nu)))/(1/(1 + nu)), shape1 = a, shape2 = b,
+                                                                  lower.tail = TRUE, log.p = FALSE)))
+    }else if(p0==0 && p1>0){
+      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, qbeta((p *
+                                                                     (1 + tau)), shape1 = a, shape2 = b, lower.tail = TRUE,
+                                                                  log.p = FALSE)))
+    }else if(p0==0 && p1==0){
+      suppressWarnings(q <-qbeta(p,shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE))
+    }
   }
   if(family == 'Simplex'){
-    suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
-                                 0, qsimplex((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
-                                             mu=mu, sig=sigma)))
+    if(p0>0 && p1>0){ suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
+                                                   0, qsimplex((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
+                                                               mu=mu, sig=sigma)))
+    }else if(p0>0 && p1==0){
+      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, qsimplex((p -
+                                                                        (nu/(1 + nu)))/(1/(1 + nu)), mu=mu, sig=sigma)))
+    }else if(p0==0 && p1>0){
+      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, qsimplex((p *
+                                                                        (1 + tau)), mu=mu, sig=sigma)))
+    }else if(p0==0 && p1==0){
+      suppressWarnings(q <-qsimplex(p,mu=mu, sig=sigma))
+    }
   }
-  q <- ifelse((p >= ((1 + nu)/(1 + nu + tau))), 1, q)
+  if(p0>0 && p1>0){
+    q <- ifelse((p >= ((1 + nu)/(1 + nu + tau))), 1, q)
+  }
   q
 }

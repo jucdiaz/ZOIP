@@ -10,8 +10,8 @@
 #'densidad de probabilidad para datos proporcionales, como la distribucion beta con sus diferentes parametrizaciones
 #'y la distribucion simplex.
 #'
-#'Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008) el cual tiene una funcion de distribucion beta
-#'f(x; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
+#'Cuando family='R-S' utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008) el cual tiene una funcion de distribucion beta.
+#'mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
 #'family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto (2004), donde sigma=phi, phi es un parametro de precision.
 #'family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
 #'family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
@@ -29,10 +29,13 @@
 #' @param log logico; si TRUE, las probabilidades de p estaran dadas como log(p).
 #' @export
 #' @examples
-#' dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
-#' dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
-#' dZOIP(x=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
-#' dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 =0.2,family='R-S',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='Simplex',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 =0,family='R-S',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 =0.2,family='R-S',log = FALSE)
+#'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 =0,family='R-S',log = FALSE)
 #'
 dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE) {
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
@@ -40,17 +43,26 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   if (any(family != 'Original') && (any(mu <= 0) | any(mu >= 1)))
     stop(paste("mu must be between 0 and 1", "\n", ""))
   if (any(family == 'Original') && any(mu <= 0))
-    stop(paste("mu is shape1 must greated than 0", "\n", ""))
+    stop(paste("mu is shape1 must higher than 0", "\n", ""))
   if (any(family == 'R-S') && (any(sigma <= 0) | any(sigma >= 1)))
     stop(paste("sigma must be between 0 and 1", "\n", ""))
   if (any(family != 'R-S') && any(sigma <= 0))
-    stop(paste("sigma must greated than 0", "\n", ""))
-  if (any(p0 <= 0) | any(p0 >= 1))
+    stop(paste("sigma must higher than 0", "\n", ""))
+  if (any(p0>=1))
+    stop(paste("p0 must be lower than 1", "\n", ""))
+  if (any(p1>=1))
+    stop(paste("p1 must be lower than 1", "\n", ""))
+  if (any(p0+p1 < 0) | any(p0+p1 >= 1))
+    stop(paste("p0+p1 must be between 0 and 1", "\n", ""))
+  if (any(p0 < 0) | any(p0 > 1))
     stop(paste("p0 must be between 0 and 1", "\n", ""))
-  if (any(p1 <= 0) | any(p1 >= 1))
+  if (any(p1 < 0) | any(p1 > 1))
     stop(paste("p1 must be between 0 and 1", "\n", ""))
   if (any(x < 0) | any(x > 1))
     stop(paste("x must be 0<=x<=1, i.e. 0 to 1 inclusively",
+               "\n", ""))
+  if ((any(x==0) | any(x==1)) && any(p0==0) && any(p1==0) )
+    stop(paste("x must be 0<x<1, desity is not inflated",
                "\n", ""))
 
   if(family == 'R-S'){
@@ -63,18 +75,23 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     a <- mu
     b <- sigma
   }
-
-  nu <- p0/(1-p0-p1)
-  tau <- p1/(1-p0-p1)
+  if(p0>0 || p1>0){
+    nu <- p0/(1-p0-p1)
+    tau <- p1/(1-p0-p1)
+  }
   logfy <- rep(0, length(x))
   if(family != 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dbeta(x, shape1 = a, shape2 = b
                                                                  , ncp = 0, log = TRUE), 0)}
   if(family == 'Simplex'){logfy <- ifelse((x > 0 & x < 1), log(dsimplex(x, mu=mu, sig=sigma)), 0)}
   logfy <- ifelse((x == 0), log(nu), logfy)
   logfy <- ifelse((x == 1), log(tau), logfy)
-  logfy <- logfy - log(1 + nu + tau)
-  if (log == FALSE)
+  if(p0>0 && p1>0){
+    logfy <- logfy - log(1 + nu + tau)
+  }else if (p0>0 && p1==0){ logfy <- logfy - log(1 + nu)
+  }else if (p0==0 && p1>0){ logfy <- logfy - log(1 + tau)
+  }else if (p0==0 && p1==0){ logfy <- logfy}
+  if (log == FALSE){
     fy <- exp(logfy)
-  else fy <- logfy
+  }else fy <- logfy
   fy
 }

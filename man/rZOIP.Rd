@@ -35,16 +35,46 @@ densidad de probabilidad para datos proporcionales, como la distribucion beta co
 y la distribucion simplex.
 
 Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008) el cual tiene una funcion de distribucion beta
-f(x; μ, sigma) = B(μ, sigma)yμ((1−sigma^2)/sigma^2)−1(1 − y)(1−μ)((1−sigma^2)/sigma^2)−1. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
+. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
 family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto (2004), donde sigma=phi, phi es un parametro de precision.
 family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
 family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
 }
 \examples{
+plot(density(rBEINF(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1, tau = 0.1)))
+plot(density(rZOIP(n=1000, mu = 0.5, sigma = 0.1)))
+plot(density(rBEINF0(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1)))
+plot(density(rZOIP(n=1000, mu = 0.5, sigma = 0.1,p0=0.09090909091,p1=0)))
+plot(density(rBEINF1(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1)))
+plot(density(rZOIP(n=1000, mu = 0.5, sigma = 0.1,p0=0,p1=0.09090909091)))
+plot(density(rbeta(n=1000,0.6,2.4)))
+plot(density(rZOIP(n=1000, mu = 0.6, sigma =2.4,p0=0,p1=0,family='Original')))
+
 a1<-rZOIP(n=1000, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S')
 a2<-rZOIP(n=1000, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C')
 a3<-rZOIP(n=1000, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original')
 system.time(a4<-rZOIP(n=10, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex'))
+
+plot(density(a1))
+plot(density(a2))
+plot(density(a3))
+plot(density(a4))
+
+a1<-rZOIP(n=1000, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0,family='R-S')
+a2<-rZOIP(n=1000, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0,family='F-C')
+a3<-rZOIP(n=1000, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0,family='Original')
+system.time(a4<-rZOIP(n=10, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0,family='Simplex'))
+
+plot(density(a1))
+plot(density(a2))
+plot(density(a3))
+plot(density(a4))
+
+a1<-rZOIP(n=1000, mu = 0.2, sigma = 0.5, p0 = 0, p1 = 0.2,family='R-S')
+a2<-rZOIP(n=1000, mu = 0.2, sigma = 3, p0 = 0, p1 = 0.2,family='F-C')
+a3<-rZOIP(n=1000, mu = 0.6, sigma = 2.4, p0 = 0, p1 = 0.2,family='Original')
+system.time(a4<-rZOIP(n=10, mu = 0.2, sigma = 3, p0 = 0, p1 = 0.2,family='Simplex'))
+
 plot(density(a1))
 plot(density(a2))
 plot(density(a3))
