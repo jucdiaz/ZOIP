@@ -169,7 +169,7 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
     i=i+1
   }
 
-  Yi<-paste0('data$',rownames(attr(terms(formula.mu),'factors'))[1])
+  Yi<-paste0('data$',as.character((attr(terms(formula.mu),'variables')))[2])
   Yi<-eval(parse(text=Yi))
 
   HM<-numDeriv::hessian(func=ll.ZOIP,x=opt$par,y=Yi,fg=fg,data=data,family=family)
@@ -306,7 +306,7 @@ fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,fami
   upper.val=c(rep(upper.mu,nparm.mu+1),rep(upper.sigma,nparm.sigma+1),
               rep(ifelse(link[3]=='logit',Inf,1),nparm.p0+1),rep(ifelse(link[4]=='logit',Inf,1),nparm.p1+1))
 
-  Yi<-paste0('data$',rownames(attr(terms(formula.mu),'factors'))[1])
+  Yi<-paste0('data$',as.character((attr(terms(formula.mu),'variables')))[2])
   Yi<-eval(parse(text=Yi))
 
   opt<-nlminb(val.inic,objective=ll.ZOIP,y=Yi,fg=fg,data=data,family=family,lower=lower.val,upper=upper.val)
