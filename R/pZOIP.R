@@ -76,9 +76,6 @@ pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   if (any(q < 0) | any(q > 1))
     stop(paste("y must be 0<=y<=1, i.e. 0 to 1 inclusively",
                "\n", ""))
-  if ((any(q==0) | any(q==1)) && any(p0==0) && any(p1==0) )
-    stop(paste("y must be 0<y<1, desity is not inflated",
-               "\n", ""))
   if(family == 'R-S'){
     a <- mu * (1 - sigma^2)/(sigma^2)
     b <- a * (1 - mu)/mu
@@ -100,8 +97,8 @@ pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
                                                                     shape2 = b, ncp = 0, lower.tail = TRUE, log.p = FALSE),
                                         0)}
   if(family == 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + psimplex(q, mu=mu, sig=sigma),0)}
-  cdf <- ifelse((q == 0), nu, cdf)
-  cdf <- ifelse((q == 1), 1 + nu + tau, cdf)
+  cdf <- ifelse((q == 0 && p0>0), nu, cdf)
+  cdf <- ifelse((q == 1 && p1>0), 1 + nu + tau, cdf)
   if(p0>0 && p1>0){
     cdf <- cdf/(1 + nu + tau)
   }else if (p0>0 && p1==0){cdf <- cdf/(1 + nu)
