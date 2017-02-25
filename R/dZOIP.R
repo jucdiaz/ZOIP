@@ -61,6 +61,9 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   if (any(x < 0) | any(x > 1))
     stop(paste("x must be 0<=x<=1, i.e. 0 to 1 inclusively",
                "\n", ""))
+  if ((any(x==0) | any(x==1)) && any(p0==0) && any(p1==0) )
+    stop(paste("x must be 0<x<1, desity is not inflated",
+               "\n", ""))
 
   if(family == 'R-S'){
     a <- mu * (1 - sigma^2)/(sigma^2)
@@ -80,8 +83,8 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   if(family != 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dbeta(x, shape1 = a, shape2 = b
                                                                  , ncp = 0, log = TRUE), 0)}
   if(family == 'Simplex'){logfy <- ifelse((x > 0 & x < 1), log(dsimplex(x, mu=mu, sig=sigma)), 0)}
-  logfy <- ifelse((x == 0 && p0>0), log(nu), logfy)
-  logfy <- ifelse((x == 1 && p1>0), log(tau), logfy)
+  logfy <- ifelse((x == 0), log(nu), logfy)
+  logfy <- ifelse((x == 1), log(tau), logfy)
   if(p0>0 && p1>0){
     logfy <- logfy - log(1 + nu + tau)
   }else if (p0>0 && p1==0){ logfy <- logfy - log(1 + nu)
