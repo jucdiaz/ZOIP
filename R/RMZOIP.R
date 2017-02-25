@@ -293,7 +293,7 @@ fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,fami
 
 
   lower.val=c(rep(ifelse((link[1]=='logit'|| link[1]=='exp'),-Inf,1e-16),nparm.mu+1),rep(ifelse((link[2]=='logit' || link[2]=='exp'),-Inf,1e-16),nparm.sigma+1),
-              rep(ifelse(link[3]=='logit',-Inf,0),nparm.p0+1),rep(ifelse(link[4]=='logit',-Inf,0),nparm.p1+1))
+              rep(ifelse(link[3]=='logit',-Inf,1e-16),nparm.p0+1),rep(ifelse(link[4]=='logit',-Inf,1e-16),nparm.p1+1))
 
   upper.mu<-if(link[1]=='logit' || ((link[1]=='exp' || link[1]=='identity') && family=='Original')){
     Inf
@@ -304,7 +304,7 @@ fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,fami
   }else 0.999999999
 
   upper.val=c(rep(upper.mu,nparm.mu+1),rep(upper.sigma,nparm.sigma+1),
-              rep(ifelse(link[3]=='logit',Inf,1),nparm.p0+1),rep(ifelse(link[4]=='logit',Inf,1),nparm.p1+1))
+              rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0+1),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1+1))
 
   Yi<-paste0('data$',as.character((attr(terms(formula.mu),'variables')))[2])
   Yi<-eval(parse(text=Yi))
