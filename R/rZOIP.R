@@ -70,7 +70,6 @@
 
 rZOIP<-function (n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 {
-  require('simplexreg')
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
     stop(paste("family must be in R-S, F-C, Original, Simplex", "\n", ""))
   if (any(family != 'Original') && (any(mu <= 0) | any(mu >= 1)))

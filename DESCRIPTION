@@ -9,7 +9,7 @@ Version: 0.1
 Author: Juan Camilo Diaz Zapata
 Maintainer: Juan Camilo Diaz Zapata <jucdiazza@unal.edu.co>
 Depends:
-    simplexreg, boot, numDeriv
+    rmutil, boot, numDeriv
 License: >GPL-2
 Encoding: UTF-8
 LazyData: true

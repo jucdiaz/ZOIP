@@ -118,16 +118,16 @@ qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   }
   if(family == 'Simplex'){
     if(p0>0 && p1>0){ suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
-                                                   0, qsimplex((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
-                                                               mu=mu, sig=sigma)))
+                                                   0, rmutil::qsimplex((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
+                                                               m=mu, s=sigma)))
     }else if(p0>0 && p1==0){
-      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, qsimplex((p -
-                                                                        (nu/(1 + nu)))/(1/(1 + nu)), mu=mu, sig=sigma)))
+      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, rmutil::qsimplex((p -
+                                                                        (nu/(1 + nu)))/(1/(1 + nu)), m=mu, s=sigma)))
     }else if(p0==0 && p1>0){
-      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, qsimplex((p *
-                                                                        (1 + tau)), mu=mu, sig=sigma)))
+      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, rmutil::qsimplex((p *
+                                                                        (1 + tau)), m=mu, s=sigma)))
     }else if(p0==0 && p1==0){
-      suppressWarnings(q <-qsimplex(p,mu=mu, sig=sigma))
+      suppressWarnings(q <-rmutil::qsimplex(p,m=mu, s=sigma))
     }
   }
   if(p0>0 && p1>0){

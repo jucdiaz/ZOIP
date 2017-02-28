@@ -99,7 +99,7 @@ pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   if(family != 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + pbeta(q, shape1 = a,
                                                                     shape2 = b, ncp = 0, lower.tail = TRUE, log.p = FALSE),
                                         0)}
-  if(family == 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + psimplex(q, mu=mu, sig=sigma),0)}
+  if(family == 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + rmutil::psimplex(q, m=mu, s=sigma),0)}
   cdf <- ifelse((q == 0), nu, cdf)
   cdf <- ifelse((q == 1), 1 + nu + tau, cdf)
   if(p0>0 && p1>0){
