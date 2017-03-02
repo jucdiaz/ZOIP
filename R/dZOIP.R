@@ -82,7 +82,10 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   logfy <- rep(0, length(x))
   if(family != 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dbeta(x, shape1 = a, shape2 = b
                                                                  , ncp = 0, log = TRUE), 0)}
-  if(family == 'Simplex'){logfy <- ifelse((x > 0 & x < 1), rmutil::dsimplex(x, m=mu, s=sigma,log=TRUE), 0)}
+  fun_simp_aux<-function(x){
+    ifelse((x > 0 & x < 1), rmutil::dsimplex(x, m = mu, s = sigma, log = TRUE), 0)
+  }
+  if(family == 'Simplex'){logfy <- apply(as.matrix(x),1,fun_simp_aux)}
   logfy <- ifelse((x == 0), log(nu), logfy)
   logfy <- ifelse((x == 1), log(tau), logfy)
   if(p0>0 && p1>0){
