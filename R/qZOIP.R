@@ -116,16 +116,29 @@ qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
       suppressWarnings(q <-qbeta(p,shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE))
     }
   }
+  fun_simp_aux1<-function(p){
+    ifelse((p <= (nu/(1 + nu + tau))),0,
+           ifelse(((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau))<=0) || ((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau))>=1)
+                  , NA,rmutil::qsimplex((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),m=mu, s=sigma)))
+  }
+  fun_simp_aux2<-function(p){
+    ifelse((p <= (nu/(1 + nu))),0,
+           ifelse(((p -(nu/(1 + nu)))/(1/(1 + nu))<=0) | ((p -(nu/(1 + nu)))/(1/(1 + nu))>=1)
+                  , NA,rmutil::qsimplex((p -(nu/(1 + nu)))/(1/(1 + nu)),m=mu, s=sigma)))
+  }
+
+  fun_simp_aux3<-function(p){
+    ifelse((p >= (1/(1 + tau))),1,
+           ifelse((p *(1 + tau)<=0) | (p *(1 + tau)>=1)
+                  , NA,rmutil::qsimplex(p *(1 + tau),m=mu, s=sigma)))
+  }
+
   if(family == 'Simplex'){
-    if(p0>0 && p1>0){ suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
-                                                   0, rmutil::qsimplex((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
-                                                               m=mu, s=sigma)))
+    if(p0>0 && p1>0){ suppressWarnings(q <- apply(as.matrix(p),1,fun_simp_aux1))
     }else if(p0>0 && p1==0){
-      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, rmutil::qsimplex((p -
-                                                                        (nu/(1 + nu)))/(1/(1 + nu)), m=mu, s=sigma)))
+      suppressWarnings(q <- apply(as.matrix(p),1,fun_simp_aux2))
     }else if(p0==0 && p1>0){
-      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, rmutil::qsimplex((p *
-                                                                        (1 + tau)), m=mu, s=sigma)))
+      suppressWarnings(q <- apply(as.matrix(p),1,fun_simp_aux3))
     }else if(p0==0 && p1==0){
       suppressWarnings(q <-rmutil::qsimplex(p,m=mu, s=sigma))
     }
@@ -135,3 +148,4 @@ qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   }
   q
 }
+
