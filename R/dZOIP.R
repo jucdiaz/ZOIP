@@ -82,10 +82,8 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   logfy <- rep(0, length(x))
   if(family != 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dbeta(x, shape1 = a, shape2 = b
                                                                  , ncp = 0, log = TRUE), 0)}
-  fun_simp_aux<-function(x){
-    ifelse((x > 0 & x < 1), rmutil::dsimplex(x, m = mu, s = sigma, log = TRUE), 0)
-  }
-  if(family == 'Simplex'){logfy <- apply(as.matrix(x),1,fun_simp_aux)}
+
+  if(family == 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dsim2(x, m = mu, s = sigma, log = TRUE), 0)}
   logfy <- ifelse((x == 0), log(nu), logfy)
   logfy <- ifelse((x == 1), log(tau), logfy)
   if(p0>0 && p1>0){
@@ -98,3 +96,17 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   }else fy <- logfy
   fy
 }
+
+dsim2 <- function (y, m, s, log = FALSE)
+{
+  if (any(m <= 0) || any(m >= 1))
+    stop("m must contain values between 0 and 1")
+  if (any(s <= 0))
+    stop("s must be positive")
+  tmp <- -((y - m) / (m * (1 - m))) ^ 2 / (2 * y * (1 - y) * s) -
+    (log(2 * pi * s) + 3 * (log(y) + log(1 - y))) / 2
+  if (!log)
+    tmp <- exp(tmp)
+  tmp
+}
+
