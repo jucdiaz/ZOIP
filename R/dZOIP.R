@@ -40,7 +40,7 @@
 dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE) {
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
     stop(paste("family must be in R-S, F-C, Original, Simplex", "\n", ""))
-  if (any(family != 'Original') && (any(mu < 0) | any(mu > 1)))
+  if (any(family != 'Original' && family != 'Simplex') && (any(mu <= 0) | any(mu => 1)))
     stop(paste("mu must be between 0 and 1", "\n", ""))
   if (any(family == 'Original') && any(mu <= 0))
     stop(paste("mu is shape1 must higher than 0", "\n", ""))
@@ -99,8 +99,8 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
 
 dsim2 <- function (y, m, s, log = FALSE)
 {
-  if (any(m < 0) || any(m > 1))
-    stop("m must contain values between 0 and 1")
+  #if (any(m < 0) || any(m > 1))
+  #  stop("m must contain values between 0 and 1")
   if (any(s <= 0))
     stop("s must be positive")
   tmp <- -((y - m) / (m * (1 - m))) ^ 2 / (2 * y * (1 - y) * s) -
