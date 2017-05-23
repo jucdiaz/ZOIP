@@ -103,39 +103,39 @@ summary.ZOIP<-function(mod){
 
 }
 
-print.ZOIP<-function(mod){
-
-  mod$nparm[mod$Vec_Bool==T]<--1
-
-  a1<-cumsum(mod$nparm)[1]
-  a2<-cumsum(mod$nparm)[2]
-  a3<-cumsum(mod$nparm)[3]
-  a4<-cumsum(mod$nparm)[4]
-
-  Aux<-c(0)
-  names(Aux)<-c('(intercept)')
-
-  if(mod$Vec_Bool[1]==F){elem.mu<-mod$par[seq(1,a1+1)]}else elem.mu<-Aux
-  if(mod$Vec_Bool[2]==F){elem.sigma<-mod$par[seq(a1+2,a2+2)]}else elem.sigma<-Aux
-  if(mod$Vec_Bool[3]==F){elem.p0<-mod$par[seq(a2+3,a3+3)]}else elem.p0<-Aux
-  if(mod$Vec_Bool[4]==F){elem.p1<-mod$par[seq(a3+4,a4+4)]}else elem.p1<-Aux
-
-  cat("Call:\n")
-  print(mod$call)
-  cat("\n Results: \n")
-  cat("\n Estimated coefficients for g(mu): \n")
-  print(elem.mu)
-  cat("\n Estimated coefficients for g(sigma): \n")
-  print(elem.sigma)
-  cat("\n Estimated coefficients for g(p0): \n")
-  print(elem.p0)
-  cat("\n Estimated coefficients for g(p1): \n")
-  print(elem.p1)
-  cat("\n Convergence \n")
-  print(mod$Convergence)
-  cat("\n message \n")
-  print(mod$message)
-  cat("\n iterations \n")
-  print(mod$iterations)
-
-}
+# print.ZOIP<-function(mod){
+#
+#   mod$nparm[mod$Vec_Bool==T]<--1
+#
+#   a1<-cumsum(mod$nparm)[1]
+#   a2<-cumsum(mod$nparm)[2]
+#   a3<-cumsum(mod$nparm)[3]
+#   a4<-cumsum(mod$nparm)[4]
+#
+#   Aux<-c(0)
+#   names(Aux)<-c('(intercept)')
+#
+#   if(mod$Vec_Bool[1]==F){elem.mu<-mod$par[seq(1,a1+1)]}else elem.mu<-Aux
+#   if(mod$Vec_Bool[2]==F){elem.sigma<-mod$par[seq(a1+2,a2+2)]}else elem.sigma<-Aux
+#   if(mod$Vec_Bool[3]==F){elem.p0<-mod$par[seq(a2+3,a3+3)]}else elem.p0<-Aux
+#   if(mod$Vec_Bool[4]==F){elem.p1<-mod$par[seq(a3+4,a4+4)]}else elem.p1<-Aux
+#
+#   cat("Call:\n")
+#   print(mod$call)
+#   cat("\n Results: \n")
+#   cat("\n Estimated coefficients for g(mu): \n")
+#   print(elem.mu)
+#   cat("\n Estimated coefficients for g(sigma): \n")
+#   print(elem.sigma)
+#   cat("\n Estimated coefficients for g(p0): \n")
+#   print(elem.p0)
+#   cat("\n Estimated coefficients for g(p1): \n")
+#   print(elem.p1)
+#   cat("\n Convergence \n")
+#   print(mod$Convergence)
+#   cat("\n message \n")
+#   print(mod$message)
+#   cat("\n iterations \n")
+#   print(mod$iterations)
+#
+# }
