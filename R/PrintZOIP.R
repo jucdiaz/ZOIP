@@ -80,5 +80,6 @@ print.ZOIP<-function(mod){
   print(mod$message)
   cat("\n iterations \n")
   print(mod$iterations)
-
+  cat("\n Log-likelihood \n")
+  print(mod$objective)
 }

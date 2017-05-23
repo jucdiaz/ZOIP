@@ -188,7 +188,7 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   }
 
 
-  Result<-list(par=NULL,Convergence=NULL,message=NULL,iterations=NULL,HM=NULL,nparm=NULL,Vec_Bool=NULL)
+  Result<-list(par=NULL,Convergence=NULL,message=NULL,iterations=NULL,HM=NULL,nparm=NULL,Vec_Bool=NULL,log_ver=NULL)
 
   Result[[1]]<-opt$par
   Result[[2]]<-opt$convergence
@@ -197,6 +197,7 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   Result[[5]]<-HM
   Result[[6]]<-c(nparm.mu,nparm.sigma,nparm.p0,nparm.p1)
   Result[[7]]<-Vec_Bool
+  Result[[8]]<-opt$objective
 
 
   Result$call <- match.call()
