@@ -78,8 +78,8 @@ print.ZOIP<-function(mod){
   print(mod$Convergence)
   cat("\n message \n")
   print(mod$message)
-  cat("\n iterations \n")
-  print(mod$iterations)
   cat("\n Log-likelihood \n")
   print(mod$log_ver)
+  cat("\n iterations \n")
+  print(mod$iterations)
 }
