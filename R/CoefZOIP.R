@@ -62,6 +62,14 @@ coef.ZOIP<-function(mod){
   if(mod$Vec_Bool[2]==F){elem.sigma<-mod$par[seq(a1+2,a2+2)]}else elem.sigma<-Aux
   if(mod$Vec_Bool[3]==F){elem.p0<-mod$par[seq(a2+3,a3+3)]}else elem.p0<-Aux
   if(mod$Vec_Bool[4]==F){elem.p1<-mod$par[seq(a3+4,a4+4)]}else elem.p1<-Aux
+
+  cant_coef_max<-max(length(elem.mu),length(elem.sigma),length(elem.p0),length(elem.p1))
+
+  elem.mu<-c(elem.mu,rep(NA,cant_coef_max-length(elem.mu)))
+  elem.sigma<-c(elem.sigma,rep(NA,cant_coef_max-length(elem.sigma)))
+  elem.p0<-c(elem.p0,rep(NA,cant_coef_max-length(elem.p0)))
+  elem.p1<-c(elem.p1,rep(NA,cant_coef_max-length(elem.p1)))
+
   result<-as.data.frame(cbind(mu=elem.mu,sigma=elem.sigma,p0=elem.p0,p1=elem.p1))
   return(result)
 }
