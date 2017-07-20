@@ -80,22 +80,22 @@ summary.ZOIP<-function(mod){
 
   cat("---------------------------------------------------------------\n")
   cat(paste("Fixed effects for ",
-            link[1], "(mu)", sep=''))
+            link[1], "(mu) \n", sep=''))
   cat("---------------------------------------------------------------\n")
   printCoefmat(elem.mu, P.value=TRUE, has.Pvalue=TRUE)
   cat("---------------------------------------------------------------\n")
   cat(paste("Fixed effects for ",
-            link[2], "(sigma)", sep=''))
+            link[2], "(sigma) \n", sep=''))
   cat("---------------------------------------------------------------\n")
   printCoefmat(elem.sigma, P.value=TRUE, has.Pvalue=TRUE)
   cat("---------------------------------------------------------------\n")
   cat(paste("Fixed effects for ",
-            link[3], "(p0)", sep=''))
+            link[3], "(p0) \n", sep=''))
   cat("---------------------------------------------------------------\n")
   printCoefmat(elem.p0, P.value=TRUE, has.Pvalue=TRUE)
   cat("---------------------------------------------------------------\n")
   cat(paste("Fixed effects for ",
-            link[4], "(p1)", sep=''))
+            link[4], "(p1) \n", sep=''))
   cat("---------------------------------------------------------------\n")
   printCoefmat(elem.p1, P.value=TRUE, has.Pvalue=TRUE)
   cat("---------------------------------------------------------------\n")

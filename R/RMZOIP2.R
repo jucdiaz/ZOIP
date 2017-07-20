@@ -169,7 +169,7 @@ RM.ZOIP2<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   X.p1 <- matri$mat.p1
   y <- matri$y
 
-  HM<-numDeriv::hessian(func=ll.ZOIP,x=opt$par,y=y,method='Richardson', X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,link=link,family=family)
+  HM<-numDeriv::hessian(func=ll.ZOIP2,x=opt$par,y=y,method='Richardson', X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,link=link,family=family)
 
   i=1
   b=0
@@ -232,7 +232,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
               rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1))
 
   if (optimizer == 'nlminb') {
-    opt <- nlminb(start=val.inic, objective=ll.ZOIP,
+    opt <- nlminb(start=val.inic, objective=ll.ZOIP2,
                   y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                   link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$objective
@@ -240,7 +240,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
   if (optimizer == 'optim') {
 
-    opt <- optim(par=val.inic, fn=ll.ZOIP,
+    opt <- optim(par=val.inic, fn=ll.ZOIP2,
                  y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                  link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$value
@@ -250,7 +250,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
 }
 
-ll.ZOIP<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
+ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
   betas.mu <- matrix(theta[1:ncol(X.mu)], ncol=1)
   betas.sigma <- matrix(theta[seq(ncol(X.mu)+1,ncol(X.mu)+ncol(X.sigma))], ncol=1)
   betas.p0 <- matrix(theta[seq(ncol(X.mu)+ncol(X.sigma)+1,ncol(X.mu)+ncol(X.sigma)+ncol(X.p0))], ncol=1)
