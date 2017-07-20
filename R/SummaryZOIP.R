@@ -54,7 +54,7 @@ summary.ZOIP<-function(mod){
   zvalue   <- estimate / se
   pvalue   <- 2 * pnorm(abs(zvalue), lower.tail=F)
   res      <- cbind(estimate=estimate, se=se, zvalue=zvalue, pvalue=pvalue)
-  colnames(res) <- c('Estimate', 'Std. Error', 't value', 'Pr(>|t|)')
+  colnames(res) <- c('Estimate', 'Std. Error', 'z value', 'Pr(>|z|)')
   res      <- as.data.frame(res)
 
   mod$nparm[mod$Vec_Bool==T]<--1
@@ -70,7 +70,7 @@ summary.ZOIP<-function(mod){
   if(mod$Vec_Bool[4]==F)rownames(res[seq(a3+4,a4+4),])<-names(mod$par)[seq(a3+4,a4+4)]
 
   Aux<-data.frame(t(c(0,NA,NA,NA,NA)))
-  colnames(Aux) <- c('Estimate', 'Std. Error', 't value', 'Pr(>|t|)')
+  colnames(Aux) <- c('Estimate', 'Std. Error', 'z value', 'Pr(>|z|)')
   rownames(Aux)<-c('(intercept)')
 
   if(mod$Vec_Bool[1]==F){elem.mu<-res[seq(1,a1+1),]}else elem.mu<-Aux

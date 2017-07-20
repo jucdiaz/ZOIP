@@ -190,7 +190,7 @@ RM.ZOIP2<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   Result[[1]]<-opt$par
   Result[[2]]<-opt$convergence
   Result[[3]]<-opt$message
-  Result[[4]]<-opt$iterations
+  Result[[4]]<-ifelse(optimizer=='nlminb',opt$iterations,NA)
   Result[[5]]<-HM
   Result[[6]]<-c(nparm.mu,nparm.sigma,nparm.p0,nparm.p1)
   Result[[7]]<-Vec_Bool
