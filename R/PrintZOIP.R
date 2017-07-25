@@ -48,8 +48,6 @@
 
 print.ZOIP<-function(mod){
 
-  mod<-Result
-
   mod$nparm[mod$Vec_Bool==T]<--1
 
   a<-cumsum(mod$nparm)
