@@ -71,10 +71,10 @@ summary.ZOIP<-function(mod){
   colnames(Aux) <- c('Estimate', 'Std. Error', 'z value', 'Pr(>|z|)')
   rownames(Aux)<-c('(intercept)')
 
-  if(mod$Vec_Bool[1]==FALSE){elem.mu<-mod$par[seq(1,a[1])]}else elem.mu<-Aux
-  if(mod$Vec_Bool[2]==FALSE){elem.sigma<-mod$par[seq(a[1]+1,a[2])]}else elem.sigma<-Aux
-  if(mod$Vec_Bool[3]==FALSE){elem.p0<-mod$par[seq(a[2]+1,a[3])]}else elem.p0<-Aux
-  if(mod$Vec_Bool[4]==FALSE){elem.p1<-mod$par[seq(a[3]+1,a[4])]}else elem.p1<-Aux
+  if(mod$Vec_Bool[1]==FALSE){elem.mu<-res[seq(1,a[1]),]}else elem.mu<-Aux
+  if(mod$Vec_Bool[2]==FALSE){elem.sigma<-res[seq(a[1]+1,a[2]),]}else elem.sigma<-Aux
+  if(mod$Vec_Bool[3]==FALSE){elem.p0<-res[seq(a[2]+1,a[3]),]}else elem.p0<-Aux
+  if(mod$Vec_Bool[4]==FALSE){elem.p1<-res[seq(a[3]+1,a[4]),]}else elem.p1<-Aux
 
   cat("---------------------------------------------------------------\n")
   cat(paste("Fixed effects for ",
