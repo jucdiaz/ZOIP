@@ -50,18 +50,15 @@ coef.ZOIP<-function(mod){
 
   mod$nparm[mod$Vec_Bool==T]<--1
 
-  a1<-cumsum(mod$nparm)[1]
-  a2<-cumsum(mod$nparm)[2]
-  a3<-cumsum(mod$nparm)[3]
-  a4<-cumsum(mod$nparm)[4]
+  a<-cumsum(mod$nparm)
 
   Aux<-c(0)
   names(Aux)<-c('(intercept)')
 
-  if(mod$Vec_Bool[1]==F){elem.mu<-mod$par[seq(1,a1+1)]}else elem.mu<-Aux
-  if(mod$Vec_Bool[2]==F){elem.sigma<-mod$par[seq(a1+2,a2+2)]}else elem.sigma<-Aux
-  if(mod$Vec_Bool[3]==F){elem.p0<-mod$par[seq(a2+3,a3+3)]}else elem.p0<-Aux
-  if(mod$Vec_Bool[4]==F){elem.p1<-mod$par[seq(a3+4,a4+4)]}else elem.p1<-Aux
+  if(mod$Vec_Bool[1]==FALSE){elem.mu<-mod$par[seq(1,a[1])]}else elem.mu<-Aux
+  if(mod$Vec_Bool[2]==FALSE){elem.sigma<-mod$par[seq(a[1]+1,a[2])]}else elem.sigma<-Aux
+  if(mod$Vec_Bool[3]==FALSE){elem.p0<-mod$par[seq(a[2]+1,a[3])]}else elem.p0<-Aux
+  if(mod$Vec_Bool[4]==FALSE){elem.p1<-mod$par[seq(a[3]+1,a[4])]}else elem.p1<-Aux
 
   result<-list(Parameters.mu=NULL,Parameters.sigma=NULL,Parameters.p0=NULL,Parameters.p1=NULL)
 

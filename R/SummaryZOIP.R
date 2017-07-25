@@ -57,26 +57,24 @@ summary.ZOIP<-function(mod){
   colnames(res) <- c('Estimate', 'Std. Error', 'z value', 'Pr(>|z|)')
   res      <- as.data.frame(res)
 
+
   mod$nparm[mod$Vec_Bool==T]<--1
 
-  a1<-cumsum(mod$nparm)[1]
-  a2<-cumsum(mod$nparm)[2]
-  a3<-cumsum(mod$nparm)[3]
-  a4<-cumsum(mod$nparm)[4]
+  a<-cumsum(mod$nparm)
 
-  if(mod$Vec_Bool[1]==F)rownames(res[seq(1,a1+1),])<-names(mod$par)[seq(1,a1+1)]
-  if(mod$Vec_Bool[2]==F)rownames(res[seq(a1+2,a2+2),])<-names(mod$par)[seq(a1+2,a2+2)]
-  if(mod$Vec_Bool[3]==F)rownames(res[seq(a2+3,a3+3),])<-names(mod$par)[seq(a2+3,a3+3)]
-  if(mod$Vec_Bool[4]==F)rownames(res[seq(a3+4,a4+4),])<-names(mod$par)[seq(a3+4,a4+4)]
+  if(mod$Vec_Bool[1]==F)rownames(res[seq(1,a[1]),])<-names(mod$par)[seq(1,a[1])]
+  if(mod$Vec_Bool[2]==F)rownames(res[seq(a[1]+1,a[2]),])<-names(mod$par)[seq(a[1]+1,a[2])]
+  if(mod$Vec_Bool[3]==F)rownames(res[seq(a[2]+1,a[3]),])<-names(mod$par)[seq(a[2]+1,a[3])]
+  if(mod$Vec_Bool[4]==F)rownames(res[seq(a[3]+1,a[4]),])<-names(mod$par)[seq(a[3]+1,a[4])]
 
   Aux<-data.frame(t(c(0,NA,NA,NA,NA)))
   colnames(Aux) <- c('Estimate', 'Std. Error', 'z value', 'Pr(>|z|)')
   rownames(Aux)<-c('(intercept)')
 
-  if(mod$Vec_Bool[1]==F){elem.mu<-res[seq(1,a1+1),]}else elem.mu<-Aux
-  if(mod$Vec_Bool[2]==F){elem.sigma<-res[seq(a1+2,a2+2),]}else elem.sigma<-Aux
-  if(mod$Vec_Bool[3]==F){elem.p0<-res[seq(a2+3,a3+3),]}else elem.p0<-Aux
-  if(mod$Vec_Bool[4]==F){elem.p1<-res[seq(a3+4,a4+4),]}else elem.p1<-Aux
+  if(mod$Vec_Bool[1]==FALSE){elem.mu<-mod$par[seq(1,a[1])]}else elem.mu<-Aux
+  if(mod$Vec_Bool[2]==FALSE){elem.sigma<-mod$par[seq(a[1]+1,a[2])]}else elem.sigma<-Aux
+  if(mod$Vec_Bool[3]==FALSE){elem.p0<-mod$par[seq(a[2]+1,a[3])]}else elem.p0<-Aux
+  if(mod$Vec_Bool[4]==FALSE){elem.p1<-mod$par[seq(a[3]+1,a[4])]}else elem.p1<-Aux
 
   cat("---------------------------------------------------------------\n")
   cat(paste("Fixed effects for ",
