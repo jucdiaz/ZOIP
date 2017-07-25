@@ -10,9 +10,10 @@
 #' @param formula.sigma Formula que define la funcion de regresion para sigma, p.e ~x1, es necesario definir la variable respuesta.
 #' @param formula.p0 Formula que define la funcion de regresion para p0, p.e ~x1, es necesario definir la variable respuesta.
 #' @param formula.p1 Formula que define la funcion de regresion para p1, p.e ~x1, es necesario definir la variable respuesta.
-#' @param data datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
-#' @param link se debe escoger la funcion de enlace adecuada a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.
-#' @param family eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex.
+#' @param data Datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
+#' @param link Eleccion de la funcion de enlace, se elige a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.
+#' @param family Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'
+#' @param optimizer Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.
 #' @examples
 #'
 #' #Test 1--------------------------------------------------
@@ -143,25 +144,21 @@ RM.ZOIP2<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   if(any(length(as.character(attr(terms(formula.p1),'variable')))>1 && link[4]!='logit'))
     stop(paste("p1 have covariables then link must be logit", "\n",""))
 
-  var.mu.p<-attr(terms(formula.mu),'term.labels')
-  var.sigma.p<-attr(terms(formula.sigma),'term.labels')
-  var.p0.p<-attr(terms(formula.p0),'term.labels')
-  var.p1.p<-attr(terms(formula.p1),'term.labels')
-
-  nparm.mu<-length(var.mu.p)
-  nparm.sigma<-length(var.sigma.p)
-  nparm.p0<-length(var.p0.p)
-  nparm.p1<-length(var.p1.p)
-
   matri<-model.matrix.ZOIP(formula.mu,formula.sigma,formula.p0,formula.p1,data=data)
+
+  nparm.mu <- ncol(matri$mat.mu)
+  nparm.sigma <- ncol(matri$mat.sigma)
+  nparm.p0 <- ncol(matri$mat.p0)
+  nparm.p1 <- ncol(matri$mat.p1)
+
   opt<-fit.ZOIP2(matri,link,family,optimizer)
 
-  nparm=c(nparm.mu+1,nparm.sigma+1,nparm.p0+1,nparm.p1+1)
+  nparm=c(nparm.mu,nparm.sigma,nparm.p0,nparm.p1)
   names<-c(colnames(matri$mat.mu),colnames(matri$mat.sigma),colnames(matri$mat.p0),colnames(matri$mat.p1))
   names(opt$par)<-names
 
 
-  Pos_inter<-c(1,nparm.mu+2,nparm.mu+nparm.sigma+3,nparm.mu+nparm.sigma+nparm.p0+4)
+  Pos_inter<-c(1,nparm.mu+1,nparm.mu+nparm.sigma+1,nparm.mu+nparm.sigma+nparm.p0+1)
 
   X.mu <- matri$mat.mu
   X.sigma <- matri$mat.sigma
