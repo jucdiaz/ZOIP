@@ -5,14 +5,15 @@
 #' inflados
 #'
 #'
-#' @usage RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
+#' @usage RM.ZOIP2(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
 #' @param formula.mu Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.
 #' @param formula.sigma Formula que define la funcion de regresion para sigma, p.e ~x1, es necesario definir la variable respuesta.
 #' @param formula.p0 Formula que define la funcion de regresion para p0, p.e ~x1, es necesario definir la variable respuesta.
 #' @param formula.p1 Formula que define la funcion de regresion para p1, p.e ~x1, es necesario definir la variable respuesta.
-#' @param data datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
-#' @param link se debe escoger la funcion de enlace adecuada a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.
-#' @param family eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex.
+#' @param data Datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
+#' @param link Eleccion de la funcion de enlace, se elige a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.
+#' @param family Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'
+#' @param optimizer Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.
 #' @examples
 #'
 #' #Test 1--------------------------------------------------
@@ -94,7 +95,8 @@
 #'
 #' @export
 
-RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S'){
+
+RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S',optimizer='nlminb'){
   library(boot)
   library(numDeriv)
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
@@ -142,37 +144,29 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   if(any(length(as.character(attr(terms(formula.p1),'variable')))>1 && link[4]!='logit'))
     stop(paste("p1 have covariables then link must be logit", "\n",""))
 
-  var.mu.p<-attr(terms(formula.mu),'term.labels')
-  var.sigma.p<-attr(terms(formula.sigma),'term.labels')
-  var.p0.p<-attr(terms(formula.p0),'term.labels')
-  var.p1.p<-attr(terms(formula.p1),'term.labels')
+  matri<-model.matrix.ZOIP(formula.mu,formula.sigma,formula.p0,formula.p1,data=data)
 
-  nparm.mu<-length(var.mu.p)
-  nparm.sigma<-length(var.sigma.p)
-  nparm.p0<-length(var.p0.p)
-  nparm.p1<-length(var.p1.p)
+  nparm.mu <- ncol(matri$mat.mu)
+  nparm.sigma <- ncol(matri$mat.sigma)
+  nparm.p0 <- ncol(matri$mat.p0)
+  nparm.p1 <- ncol(matri$mat.p1)
 
-  fg<-Formula.ZOIP(formula.mu,formula.sigma,formula.p0,formula.p1,link,family)
-  opt<-fit.ZOIP(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,family,fg)
+  opt<-fit.ZOIP2(matri,link,family,optimizer)
 
-  nparm=c(nparm.mu+1,nparm.sigma+1,nparm.p0+1,nparm.p1+1)
-  names<-c('(intercept)',var.mu.p,'(intercept)',var.sigma.p,'(intercept)',var.p0.p,'(intercept)',var.p1.p)
-
+  nparm=c(nparm.mu,nparm.sigma,nparm.p0,nparm.p1)
+  names<-c(colnames(matri$mat.mu),colnames(matri$mat.sigma),colnames(matri$mat.p0),colnames(matri$mat.p1))
   names(opt$par)<-names
-  Pos_inter<-c(1,nparm.mu+2,nparm.mu+nparm.sigma+3,nparm.mu+nparm.sigma+nparm.p0+4)
-  i=1
-  while(i<=4){
-    if((nparm-1)[i]==0 && opt$par[Pos_inter[i]]<0.0001){
-      val<-paste0('X[',Pos_inter[i],']')
-      fg<-gsub(val,'1e-16',fg,fixed = TRUE)
-    }
-    i=i+1
-  }
 
-  Yi<-paste0('data$',as.character((attr(terms(formula.mu),'variables')))[2])
-  Yi<-eval(parse(text=Yi))
 
-  HM<-numDeriv::hessian(func=ll.ZOIP,x=opt$par,y=Yi,fg=fg,data=data,family=family)
+  Pos_inter<-c(1,nparm.mu+1,nparm.mu+nparm.sigma+1,nparm.mu+nparm.sigma+nparm.p0+1)
+
+  X.mu <- matri$mat.mu
+  X.sigma <- matri$mat.sigma
+  X.p0 <- matri$mat.p0
+  X.p1 <- matri$mat.p1
+  y <- matri$y
+
+  HM<-numDeriv::hessian(func=ll.ZOIP2,x=opt$par,y=y,method='Richardson', X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,link=link,family=family)
 
   i=1
   b=0
@@ -193,7 +187,7 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   Result[[1]]<-opt$par
   Result[[2]]<-opt$convergence
   Result[[3]]<-opt$message
-  Result[[4]]<-opt$iterations
+  Result[[4]]<-ifelse(optimizer=='nlminb',opt$iterations,NA)
   Result[[5]]<-HM
   Result[[6]]<-c(nparm.mu,nparm.sigma,nparm.p0,nparm.p1)
   Result[[7]]<-Vec_Bool
@@ -205,96 +199,23 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
 
   return(Result)
 }
+fit.ZOIP2<-function(matri,link,family,optimizer){
+  nparm.mu <- ncol(matri$mat.mu)
+  nparm.sigma <- ncol(matri$mat.sigma)
+  nparm.p0 <- ncol(matri$mat.p0)
+  nparm.p1 <- ncol(matri$mat.p1)
 
-Formula.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,link,family){
-
-  var.mu.p<-attr(terms(formula.mu),'term.labels')
-  var.sigma.p<-attr(terms(formula.sigma),'term.labels')
-  var.p0.p<-attr(terms(formula.p0),'term.labels')
-  var.p1.p<-attr(terms(formula.p1),'term.labels')
-
-  nparm.mu<-length(var.mu.p)
-  nparm.sigma<-length(var.sigma.p)
-  nparm.p0<-length(var.p0.p)
-  nparm.p1<-length(var.p1.p)
-
-  if(nparm.mu!=0){
-    var.mu<-paste0('data$',var.mu.p)
-  }else{
-    var.mu<-var.mu.p
-  }
-
-  if(nparm.sigma!=0){
-    var.sigma<-paste0('data$',var.sigma.p)
-  }else{
-    var.sigma<-var.sigma.p
-  }
-
-  if(nparm.p0!=0){
-    var.p0<-paste0('data$',var.p0.p)
-  }else{
-    var.p0<-var.p0.p
-  }
-
-  if(nparm.p1!=0){
-    var.p1<-paste0('data$',var.p1.p)
-  }else{
-    var.p1<-var.p1.p
-  }
+  X.mu <- matri$mat.mu
+  X.sigma <- matri$mat.sigma
+  X.p0 <- matri$mat.p0
+  X.p1 <- matri$mat.p1
+  y <- matri$y
 
 
-  X.mu<-paste0('X[',seq(1,nparm.mu+1),']')
-  X.sigma<-paste0('X[',seq(nparm.mu+2,nparm.mu+nparm.sigma+2),']')
-  X.p0<-paste0('X[',seq(nparm.mu+nparm.sigma+3,nparm.mu+nparm.sigma+nparm.p0+3),']')
-  X.p1<-paste0('X[',seq(nparm.mu+nparm.sigma+nparm.p0+4,nparm.mu+nparm.sigma+nparm.p0+nparm.p1+4),']')
+  val.inic<-rep(0.1,nparm.mu+nparm.sigma+nparm.p0+nparm.p1)
 
-  F.mu<-ifelse(nparm.mu==0,X.mu,paste0(X.mu[1],
-                                       paste(paste0('+',paste0(X.mu[-1],paste0('*',var.mu))),collapse='')))
-  F.sigma<-ifelse(nparm.sigma==0,X.sigma,
-                  paste0(X.sigma[1],paste(paste0('+',paste0(X.sigma[-1],paste0('*',var.sigma))),collapse='')))
-  F.p0<-ifelse(nparm.p0==0,X.p0,
-               paste0(X.p0[1],paste(paste0('+',paste0(X.p0[-1],paste0('*',var.p0))),collapse='')))
-  F.p1<-ifelse(nparm.p1==0,X.p1,
-               paste0(X.p1[1],paste(paste0('+',paste0(X.p1[-1],paste0('*',var.p1))),collapse='')))
-
-  F.mu.2<-if(link[1]=='logit'){
-    paste0('inv.logit(',F.mu,')')
-  }else if(link[1]=='exp'){
-    paste0('exp(',F.mu,')')
-  }else F.mu
-
-  F.sigma.2<-if(link[2]=='logit'){
-    paste0('inv.logit(',F.sigma,')')
-  }else if(link[2]=='exp'){
-    paste0('exp(',F.sigma,')')
-  }else F.sigma
-
-  F.p0.2<-ifelse(link[3]=='logit',paste0('inv.logit(',F.p0,')'),F.p0)
-  F.p1.2<-ifelse(link[4]=='logit',paste0('inv.logit(',F.p1,')'),F.p1)
-
-  F_final<-paste0('-1*sum(dZOIP(y,mu=',F.mu.2,',sigma=',F.sigma.2,
-                  ',p0=',F.p0.2,',p1=',F.p1.2,',family,log = TRUE))')
-
-  return(F_final)
-}
-
-
-fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,family,fg){
-  var.mu.p<-attr(terms(formula.mu),'term.labels')
-  var.sigma.p<-attr(terms(formula.sigma),'term.labels')
-  var.p0.p<-attr(terms(formula.p0),'term.labels')
-  var.p1.p<-attr(terms(formula.p1),'term.labels')
-
-  nparm.mu<-length(var.mu.p)
-  nparm.sigma<-length(var.sigma.p)
-  nparm.p0<-length(var.p0.p)
-  nparm.p1<-length(var.p1.p)
-
-  val.inic<-rep(0.1,nparm.mu+nparm.sigma+nparm.p0+nparm.p1+4)
-
-
-  lower.val=c(rep(ifelse((link[1]=='logit'|| link[1]=='exp'),-Inf,1e-16),nparm.mu+1),rep(ifelse((link[2]=='logit' || link[2]=='exp'),-Inf,1e-16),nparm.sigma+1),
-              rep(ifelse(link[3]=='logit',-Inf,1e-16),nparm.p0+1),rep(ifelse(link[4]=='logit',-Inf,1e-16),nparm.p1+1))
+  lower.val=c(rep(ifelse((link[1]=='logit'|| link[1]=='exp'),-Inf,1e-16),nparm.mu),rep(ifelse((link[2]=='logit' || link[2]=='exp'),-Inf,1e-16),nparm.sigma),
+              rep(ifelse(link[3]=='logit',-Inf,1e-16),nparm.p0),rep(ifelse(link[4]=='logit',-Inf,1e-16),nparm.p1))
 
   upper.mu<-if(link[1]=='logit' || ((link[1]=='exp' || link[1]=='identity') && family=='Original')){
     Inf
@@ -304,21 +225,85 @@ fit.ZOIP<-function(formula.mu,formula.sigma,formula.p0,formula.p1,data,link,fami
     Inf
   }else 0.999999999
 
-  upper.val=c(rep(upper.mu,nparm.mu+1),rep(upper.sigma,nparm.sigma+1),
-              rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0+1),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1+1))
+  upper.val=c(rep(upper.mu,nparm.mu),rep(upper.sigma,nparm.sigma),
+              rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1))
 
-  Yi<-paste0('data$',as.character((attr(terms(formula.mu),'variables')))[2])
-  Yi<-eval(parse(text=Yi))
+  if (optimizer == 'nlminb') {
+    opt <- nlminb(start=val.inic, objective=ll.ZOIP2,
+                  y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
+                  link=link,family=family,lower=lower.val,upper=upper.val)
+    opt$objective <- -opt$objective
+  }
 
-  opt<-nlminb(val.inic,objective=ll.ZOIP,y=Yi,fg=fg,data=data,family=family,lower=lower.val,upper=upper.val)
+  if (optimizer == 'optim') {
+
+    opt <- optim(par=val.inic, fn=ll.ZOIP2,
+                 y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
+                 link=link,family=family,lower=lower.val,upper=upper.val)
+    opt$objective <- -opt$value
+  }
 
   return(opt)
 
 }
 
-ll.ZOIP<-function(X,y,fg,data,family){
-  eval(parse(text=fg))
+ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
+  betas.mu <- matrix(theta[1:ncol(X.mu)], ncol=1)
+  betas.sigma <- matrix(theta[seq(ncol(X.mu)+1,ncol(X.mu)+ncol(X.sigma))], ncol=1)
+  betas.p0 <- matrix(theta[seq(ncol(X.mu)+ncol(X.sigma)+1,ncol(X.mu)+ncol(X.sigma)+ncol(X.p0))], ncol=1)
+  betas.p1 <- matrix(theta[seq(ncol(X.mu)+ncol(X.sigma)+ncol(X.p0)+1,ncol(X.mu)+ncol(X.sigma)+ncol(X.p0)+ncol(X.p1))], ncol=1)
+
+  if(link[1]=='identity'){
+    mu<-X.mu %*% betas.mu
+  }else if(link[1]=='logit'){
+    mu<-1 / (1 + exp(- X.mu %*% betas.mu))
+  }else if(link[1]=='exp'){
+    mu<-exp(X.mu %*% betas.mu)
+  }
+
+  if(link[2]=='identity'){
+    sigma<-X.sigma %*% betas.sigma
+  }else if(link[2]=='logit'){
+    sigma<-1 / (1 + exp(- X.sigma %*% betas.sigma))
+  }else if(link[2]=='exp'){
+    sigma<-exp(X.sigma %*% betas.sigma)
+  }
+
+  if(link[3]=='identity'){
+    p0<-X.p0 %*% betas.p0
+  }else if(link[3]=='logit'){
+    p0<-1 / (1 + exp(- X.p0 %*% betas.p0))
+  }
+
+  if(link[4]=='identity'){
+    p1<-X.p1 %*% betas.p1
+  }else if(link[4]=='logit'){
+    p1<-1 / (1 + exp(- X.p1 %*% betas.p1))
+  }
+
+  ll<-sum(dZOIP(x=y,mu=mu,sigma=sigma,p0=p0,p1=p1,family=family,log=TRUE))
+  -ll
 }
 
 
+model.matrix.ZOIP <- function(formula.mu,formula.sigma,formula.p0,formula.p1, data=NULL) {
+  stopifnot (class(formula.mu) == 'formula')
+  stopifnot (class(formula.sigma) == 'formula')
+  stopifnot (class(formula.p0) == 'formula')
+  stopifnot (class(formula.p1) == 'formula')
+  response <- all.vars(formula.mu)[1]
+  formula.sigma <- as.formula(paste(response, paste(as.character(formula.sigma),
+                                                    collapse='')))
+  formula.p0 <- as.formula(paste(response, paste(as.character(formula.p0),
+                                                 collapse='')))
+  formula.p1 <- as.formula(paste(response, paste(as.character(formula.p1),
+                                                 collapse='')))
+  mat.mu <- model.matrix(formula.mu, data)
+  mat.sigma <- model.matrix(formula.sigma, data)
+  mat.p0 <- model.matrix(formula.p0, data)
+  mat.p1 <- model.matrix(formula.p1, data)
+  y <- model.frame(formula.mu, data=data)[, 1]
+  matri<-list(mat.mu=mat.mu, mat.sigma=mat.sigma,mat.p0=mat.p0,mat.p1=mat.p1, y=y)
+  return(matri)
+}
 

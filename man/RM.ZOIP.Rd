@@ -4,7 +4,7 @@
 \alias{RM.ZOIP}
 \title{Regresion ZOIP}
 \usage{
-RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
+RM.ZOIP2(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
 }
 \arguments{
 \item{formula.mu}{Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.}
@@ -15,11 +15,13 @@ RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('ide
 
 \item{formula.p1}{Formula que define la funcion de regresion para p1, p.e ~x1, es necesario definir la variable respuesta.}
 
-\item{data}{datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.}
+\item{data}{Datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.}
 
-\item{link}{se debe escoger la funcion de enlace adecuada a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.}
+\item{link}{Eleccion de la funcion de enlace, se elige a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.}
 
-\item{family}{eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex.}
+\item{family}{Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'}
+
+\item{optimizer}{Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.}
 }
 \description{
 la funcion RM.ZOIP ajusta un modelo de regresion ZOIP via maxima verosimilitud. el modelo puede incluir o no
