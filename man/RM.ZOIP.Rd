@@ -63,7 +63,7 @@ formula.mu=y_i~x1
 formula.sigma=~x1+x2
 formula.p0=~1
 formula.p1=~x2
-link=c('exp','exp','identity','logit')
+link=c('log','log','identity','logit')
 family='Original'
 mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=data,link=link,family=family)
 mod
@@ -101,7 +101,7 @@ formula.mu=y_i~x1
 formula.sigma=~x1+x2
 formula.p0=~1
 formula.p1=~1
-link=c('exp','exp','identity','identity')
+link=c('log','log','identity','identity')
 family='Original'
 mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=data,link=link,family=family)
 mod

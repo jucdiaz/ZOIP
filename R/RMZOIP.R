@@ -49,7 +49,7 @@
 #' formula.sigma=~x1+x2
 #' formula.p0=~1
 #' formula.p1=~x2
-#' link=c('exp','exp','identity','logit')
+#' link=c('log','log','identity','logit')
 #' family='Original'
 #' mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=data,link=link,family=family)
 #' mod
@@ -87,7 +87,7 @@
 #' formula.sigma=~x1+x2
 #' formula.p0=~1
 #' formula.p1=~1
-#' link=c('exp','exp','identity','identity')
+#' link=c('log','log','identity','identity')
 #' family='Original'
 #' mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=data,link=link,family=family)
 #' mod
@@ -115,9 +115,9 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
     stop(paste("Object 'data' must be a data frame class","\n",""))
   if(any(length(link)<4))
     stop(paste("link must have four enlace functions", "\n",""))
-  if(any(link[1]!='identity' && link[1]!='logit' && link[1]!='exp'))
+  if(any(link[1]!='identity' && link[1]!='logit' && link[1]!='log'))
     stop(paste("link for mu must be in identity, logit, exp", "\n",""))
-  if(any(link[2]!='identity' && link[2]!='logit' && link[2]!='exp'))
+  if(any(link[2]!='identity' && link[2]!='logit' && link[2]!='log'))
     stop(paste("link for sigma must be in identity, logit, exp", "\n",""))
   if(any(link[3]!='identity' && link[3]!='logit'))
     stop(paste("link for p0 must be in identity, logit", "\n",""))
@@ -127,11 +127,11 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
     stop(paste("mu don't have covariables then link must be identity", "\n",""))
   if(any(family!='Original' && length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='logit'))
     stop(paste("If family is diferent a Original and mu have covariables then link must be logit", "\n",""))
-  if(any(family=='Original'&& length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='exp'))
+  if(any(family=='Original'&& length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='log'))
     stop(paste("If family is Original and mu have covariables then link must be exp", "\n",""))
   if(any(length(as.character(attr(terms(formula.sigma),'variable')))==1 && link[2]!='identity'))
     stop(paste("sigma don't have covariables then link must be identity", "\n",""))
-  if(any(family!='R-S' && length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='exp'))
+  if(any(family!='R-S' && length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='log'))
     stop(paste("If family is diferent a R-S and sigma have covariables then link must be exp", "\n",""))
   if(any(family=='R-S'&& length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='logit'))
     stop(paste("If family is R-S and sigma have covariables then link must be logit", "\n",""))
@@ -214,14 +214,14 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
   val.inic<-rep(0.1,nparm.mu+nparm.sigma+nparm.p0+nparm.p1)
 
-  lower.val=c(rep(ifelse((link[1]=='logit'|| link[1]=='exp'),-Inf,1e-16),nparm.mu),rep(ifelse((link[2]=='logit' || link[2]=='exp'),-Inf,1e-16),nparm.sigma),
+  lower.val=c(rep(ifelse((link[1]=='logit'|| link[1]=='log'),-Inf,1e-16),nparm.mu),rep(ifelse((link[2]=='logit' || link[2]=='log'),-Inf,1e-16),nparm.sigma),
               rep(ifelse(link[3]=='logit',-Inf,1e-16),nparm.p0),rep(ifelse(link[4]=='logit',-Inf,1e-16),nparm.p1))
 
-  upper.mu<-if(link[1]=='logit' || ((link[1]=='exp' || link[1]=='identity') && family=='Original')){
+  upper.mu<-if(link[1]=='logit' || ((link[1]=='log' || link[1]=='identity') && family=='Original')){
     Inf
   }else 0.999999999
 
-  upper.sigma<-if(link[2]=='logit' || link[2]=='exp' || (link[2]=='identity' && family!='R-S')){
+  upper.sigma<-if(link[2]=='logit' || link[2]=='log' || (link[2]=='identity' && family!='R-S')){
     Inf
   }else 0.999999999
 
@@ -257,7 +257,7 @@ ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
     mu<-X.mu %*% betas.mu
   }else if(link[1]=='logit'){
     mu<-1 / (1 + exp(- X.mu %*% betas.mu))
-  }else if(link[1]=='exp'){
+  }else if(link[1]=='log'){
     mu<-exp(X.mu %*% betas.mu)
   }
 
@@ -265,7 +265,7 @@ ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
     sigma<-X.sigma %*% betas.sigma
   }else if(link[2]=='logit'){
     sigma<-1 / (1 + exp(- X.sigma %*% betas.sigma))
-  }else if(link[2]=='exp'){
+  }else if(link[2]=='log'){
     sigma<-exp(X.sigma %*% betas.sigma)
   }
 
