@@ -272,14 +272,25 @@ ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
   if(link[3]=='identity'){
     p0<-X.p0 %*% betas.p0
   }else if(link[3]=='logit'){
-    p0<-1 / (1 + exp(- X.p0 %*% betas.p0))
+    nu<- exp(X.p0 %*% betas.p0)
+    #p0<-1 / (1 + exp(- X.p0 %*% betas.p0))
   }
 
   if(link[4]=='identity'){
     p1<-X.p1 %*% betas.p1
   }else if(link[4]=='logit'){
-    p1<-1 / (1 + exp(- X.p1 %*% betas.p1))
+    tau<-exp(X.p1 %*% betas.p1)
+    #p1<-1 / (1 + exp(- X.p1 %*% betas.p1))
   }
+
+if(link[3]=='logit' && link[4]=='logit'){
+  p0<-nu/(1+nu+tau)
+  p1<-tau/(1+nu+tau)
+}else if(link[3]=='logit' && link[4]=='identity'){
+  p0<-(nu-(p1*nu))/(nu+1)
+}else if(link[3]=='identity' && link[4]=='logit'){
+  p1<-(tau-(p0*tau))/(tau+1)
+}
 
   ll<-sum(dZOIP(x=y,mu=mu,sigma=sigma,p0=p0,p1=p1,family=family,log=TRUE))
   -ll
