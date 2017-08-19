@@ -5,7 +5,7 @@
 #' inflados
 #'
 #'
-#' @usage RM.ZOIP2(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
+#' @usage RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
 #' @param formula.mu Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.
 #' @param formula.sigma Formula que define la funcion de regresion para sigma, p.e ~x1, es necesario definir la variable respuesta.
 #' @param formula.p0 Formula que define la funcion de regresion para p0, p.e ~x1, es necesario definir la variable respuesta.
@@ -143,6 +143,8 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
     stop(paste("p1 don't have covariables then link must be identity", "\n",""))
   if(any(length(as.character(attr(terms(formula.p1),'variable')))>1 && link[4]!='logit'))
     stop(paste("p1 have covariables then link must be logit", "\n",""))
+  if(any(optimizer!='nlminb' && optimizer!='optim'))
+    stop(paste("optimizer should be 'nlminb' or 'optim'", "\n",""))
 
   matri<-model.matrix.ZOIP(formula.mu,formula.sigma,formula.p0,formula.p1,data=data)
 

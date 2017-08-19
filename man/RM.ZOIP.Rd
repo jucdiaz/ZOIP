@@ -4,7 +4,7 @@
 \alias{RM.ZOIP}
 \title{Regresion ZOIP}
 \usage{
-RM.ZOIP2(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
+RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
 }
 \arguments{
 \item{formula.mu}{Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.}
