@@ -1,15 +1,15 @@
 Package: ZOIP
-Title: Distribucion ZOIP
+Title: ZOIP Distribution, ZOIP Regression, ZOIP mixted regression.
 Description: La funcion ZOIP() define las distribuciones para datos
     proporcionales inflados con ceros y unos mas conocidas, como la distribucion beta
     y simplex, ademas permite que se tengan distintas parametrizaciones de la distribucion beta.La funcion
     ZOIP() posee 4 parametros dos de ellos corresponden a la porporcion de ceros y unos que
     quiere que posea la distribucion para datos proporcionales de su eleccion.
-Version: 0.1
+Version: 1.4
 Author: Juan Camilo Diaz Zapata
 Maintainer: Juan Camilo Diaz Zapata <jucdiazza@unal.edu.co>
 Depends:
-    rmutil, boot, numDeriv
+    rmutil, boot, numDeriv, GHQp
 License: >GPL-2
 Encoding: UTF-8
 LazyData: true
