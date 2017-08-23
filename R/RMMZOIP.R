@@ -127,7 +127,6 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
     stop(paste("p1 have covariables then link must be logit", "\n",""))
   if(any(optimizer!='nlminb' && optimizer!='optim'))
     stop(paste("optimizer should be 'nlminb' or 'optim'", "\n",""))
-
   if(any(length(as.character(attr(terms(formula.random),'variable')))!=2))
     stop(paste("formula.random don't have ~1 and/or group variable", "\n",""))
   if(any(grep("|",attr(terms(formula.random),'term.labels'))!=1))
@@ -210,11 +209,6 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
 
   return(result)
 }
-##--------------------------------------------------------------------------------------
-##--------------------------------------------------------------------------------------
-##Funciones en orden de ejecucion-------------------------------------------------------
-##--------------------------------------------------------------------------------------
-##--------------------------------------------------------------------------------------
 
 model.matrix.ZOIP <- function(formula.mu,formula.sigma,formula.p0,formula.p1, data,formula.random) {
   stopifnot (class(formula.mu) == 'formula')
@@ -246,13 +240,6 @@ model.matrix.ZOIP <- function(formula.mu,formula.sigma,formula.p0,formula.p1, da
               ,inter.ran=inter.ran)
   return(matri)
 }
-
-
-##--------------------------------------------------------------------------------------
-##--------------------------------------------------------------------------------------
-## log-likelihood function FiXED EFFECTS -----------------------------------------------
-##--------------------------------------------------------------------------------------
-##--------------------------------------------------------------------------------------
 
 fit.ZOIP2<-function(matri,link,family,optimizer){
   nparm.mu <- ncol(matri$mat.mu)
@@ -302,8 +289,6 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
 }
 
-
-
 ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
   betas.mu <- matrix(theta[1:ncol(X.mu)], ncol=1)
   betas.sigma <- matrix(theta[seq(ncol(X.mu)+1,ncol(X.mu)+ncol(X.sigma))], ncol=1)
@@ -352,13 +337,6 @@ ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
   ll<-sum(dZOIP(x=y,mu=mu,sigma=sigma,p0=p0,p1=p1,family=family,log=TRUE))
   -ll
 }
-
-
-##--------------------------------------------------------------------------------------
-##--------------------------------------------------------------------------------------
-## log-likelihood function MIXED EFFECTS -----------------------------------------------
-##--------------------------------------------------------------------------------------
-##--------------------------------------------------------------------------------------
 
 llM <- function(theta, Y, mat.mu, mat.sigma, mat.p0, mat.p1, inter.ran, quad,link,family) {
 
@@ -481,17 +459,6 @@ integrando <- function(u, y, X.mu,X.sigma, X.p0, X.p1,
     }else if(link[3]=='identity' && link[4]=='logit'){
       p1<-(tau-(p0*tau))/(tau+1)
     }
-
-
-    # mu    <- 1 / (1 + exp(- c(x1%*%beta1) + ui)) #1 / (1 + exp(- c(x1%*%beta1) + rowSums(x1*ui) )) # 1 / (1 + exp(- c(x1%*%beta1) + ui))
-    #
-    # sigma     <- 1 / (1 + exp(- x2 %*% beta2 ))
-    #
-    # nu<- exp(x3 %*% beta3)
-    # tau<-exp(x4 %*% beta4)
-    #
-    # p0<-nu/(1+nu+tau)
-    # p1<-tau/(1+nu+tau)
 
     temp1 <- sum( dZOIP(x=y, mu=mu, sigma=sigma,p0=p0,p1=p1, family=family, log=TRUE) )
     temp2<-dnorm(ui[1],mean=0,sd=t1,log=TRUE)
