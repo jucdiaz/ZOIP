@@ -138,9 +138,9 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
 
   quad <- GHQp ::GHQ(n=n.points, ndim=2, pruning=pruning)
 
-  matri<-model.matrix.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1, data=data,formula.random=formula.random)
+  matri<-model.matrix.ZOIP2(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1, data=data,formula.random=formula.random)
 
-  opt<-fit.ZOIP2(matri=matri,link=link,family=family,optimizer=optimizer)
+  opt<-fit.ZOIPM(matri=matri,link=link,family=family,optimizer=optimizer)
 
   opt$par
   theta0 <- c( opt$par, -1, -1)
@@ -210,7 +210,7 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   return(result)
 }
 
-model.matrix.ZOIP <- function(formula.mu,formula.sigma,formula.p0,formula.p1, data,formula.random) {
+model.matrix.ZOIP2 <- function(formula.mu,formula.sigma,formula.p0,formula.p1, data,formula.random) {
   stopifnot (class(formula.mu) == 'formula')
   stopifnot (class(formula.sigma) == 'formula')
   stopifnot (class(formula.p0) == 'formula')
@@ -241,7 +241,7 @@ model.matrix.ZOIP <- function(formula.mu,formula.sigma,formula.p0,formula.p1, da
   return(matri)
 }
 
-fit.ZOIP2<-function(matri,link,family,optimizer){
+fit.ZOIPM<-function(matri,link,family,optimizer){
   nparm.mu <- ncol(matri$mat.mu)
   nparm.sigma <- ncol(matri$mat.sigma)
   nparm.p0 <- ncol(matri$mat.p0)
@@ -271,7 +271,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
               rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1))
 
   if (optimizer == 'nlminb') {
-    opt <- nlminb(start=val.inic, objective=ll.ZOIP2,
+    opt <- nlminb(start=val.inic, objective=ll.ZOIPM,
                   y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                   link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$objective
@@ -279,7 +279,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
   if (optimizer == 'optim') {
 
-    opt <- optim(par=val.inic, fn=ll.ZOIP2,
+    opt <- optim(par=val.inic, fn=ll.ZOIPM,
                  y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                  link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$value
@@ -289,7 +289,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
 }
 
-ll.ZOIP2<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
+ll.ZOIPM<-function(theta,y,X.mu,X.sigma,X.p0,X.p1,link,family){
   betas.mu <- matrix(theta[1:ncol(X.mu)], ncol=1)
   betas.sigma <- matrix(theta[seq(ncol(X.mu)+1,ncol(X.mu)+ncol(X.sigma))], ncol=1)
   betas.p0 <- matrix(theta[seq(ncol(X.mu)+ncol(X.sigma)+1,ncol(X.mu)+ncol(X.sigma)+ncol(X.p0))], ncol=1)
