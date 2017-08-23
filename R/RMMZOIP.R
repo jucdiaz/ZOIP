@@ -139,8 +139,7 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
 
   quad <- GHQp ::GHQ(n=n.points, ndim=2, pruning=pruning)
 
-  matri<-model.matrix.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma
-                           ,formula.p0=formula.p0,formula.p1=formula.p1, data=data,
+  matri<-model.matrix.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1, data=data,
                            formula.random=formula.random)
 
   opt<-fit.ZOIP2(matri=matri,link=link,family=family,optimizer=optimizer)
