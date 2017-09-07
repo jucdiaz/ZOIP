@@ -18,7 +18,7 @@
 #' @param optimizer Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.
 #' @param formula.random Formula que define el intercepto aleatorio a tener encuenta en la funcion, p.e formula.random= ~ 1 | X1.
 #' @param n.points numero de puntos a utilizar en la aproximacion por medio de la cuadratura de gauss-hermite adpatativa. por defecto es 11.
-#' @param pruning es una expresion logica que intica si se utilizara prunin o no. por defecto es TRUE.
+#' @param pruning es una expresion logica que indica si se utilizara prunin o no. por defecto es TRUE.
 #' @examples
 #'
 #' library(ZOIP)

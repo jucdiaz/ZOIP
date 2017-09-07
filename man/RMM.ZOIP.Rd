@@ -27,7 +27,7 @@ RMM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,formula.ra
 
 \item{n.points}{numero de puntos a utilizar en la aproximacion por medio de la cuadratura de gauss-hermite adpatativa. por defecto es 11.}
 
-\item{pruning}{es una expresion logica que intica si se utilizara prunin o no. por defecto es TRUE.}
+\item{pruning}{es una expresion logica que indica si se utilizara prunin o no. por defecto es TRUE.}
 }
 \description{
 la funcion RMM.ZOIP ajusta un modelo de regresion mixto ZOIP con interceptos aletorios
