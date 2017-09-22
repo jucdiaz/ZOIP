@@ -2,7 +2,9 @@
 
 S3method(coef,ZOIP)
 S3method(print,ZOIP)
+S3method(print,ZOIPM)
 S3method(summary,ZOIP)
+S3method(summary,ZOIPM)
 export(RM.ZOIP)
 export(RM.ZOIP_old)
 export(RMM.ZOIP)

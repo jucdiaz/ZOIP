@@ -27,7 +27,7 @@ RMM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,formula.ra
 
 \item{n.points}{numero de puntos a utilizar en la aproximacion por medio de la cuadratura de gauss-hermite adpatativa. por defecto es 11.}
 
-\item{pruning}{es una expresion logica que indica si se utilizara prunin o no. por defecto es TRUE.}
+\item{pruning}{es un valor booleano que indica si se utilizara pruning o no. por defecto es TRUE.}
 }
 \description{
 la funcion RMM.ZOIP ajusta un modelo de regresion mixto ZOIP con interceptos aletorios
@@ -39,7 +39,6 @@ inflados.
 \examples{
 
 library(ZOIP)
-library(GHQp)
 N<-21
 
 Times <- c(2, 10, 20, 40) # cantidad de dias
@@ -69,15 +68,14 @@ sigma[sigma==0] <- 0.001
 
 family<-'R-S'
 
-Y <- rZOIP(n=length(mu), mu = mu, sigma = sigma ,p0=p0,p1=p1,family=family) # simulacion de datos con dispersion fija, gran detalle que la dispersion este fija (como hacer si no?)
+Y <- rZOIP(n=length(mu), mu = mu, sigma = sigma ,p0=p0,p1=p1,family=family)
+base<-data.frame(Y,Days,subject)
 
-base<-data.frame(Y,Days,Concentration.encoded,subject)
 
-
-formula.mu <- Y ~ log(Days) #+ I(log(Days)^2) + Concentration.encoded
+formula.mu <- Y ~ log(Days)
 formula.sigma<-~log(Days)
-formula.p0<-~1#log(Days)
-formula.p1<-~1#log(Days)
+formula.p0<-~1
+formula.p1<-~1
 
 formula.random=~1 | subject
 
@@ -91,5 +89,6 @@ pruning <- TRUE
 mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=base,
               formula.random=formula.random,link=link,family=family,optimizer=optimizer,
               n.points=n.points,pruning=pruning)
+mod
 }
 

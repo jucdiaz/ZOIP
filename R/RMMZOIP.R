@@ -18,11 +18,10 @@
 #' @param optimizer Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.
 #' @param formula.random Formula que define el intercepto aleatorio a tener encuenta en la funcion, p.e formula.random= ~ 1 | X1.
 #' @param n.points numero de puntos a utilizar en la aproximacion por medio de la cuadratura de gauss-hermite adpatativa. por defecto es 11.
-#' @param pruning es una expresion logica que indica si se utilizara prunin o no. por defecto es TRUE.
+#' @param pruning es un valor booleano que indica si se utilizara pruning o no. por defecto es TRUE.
 #' @examples
 #'
 #' library(ZOIP)
-#' library(GHQp)
 #' N<-21
 #'
 #' Times <- c(2, 10, 20, 40) # cantidad de dias
@@ -52,15 +51,14 @@
 #'
 #' family<-'R-S'
 #'
-#' Y <- rZOIP(n=length(mu), mu = mu, sigma = sigma ,p0=p0,p1=p1,family=family) # simulacion de datos con dispersion fija, gran detalle que la dispersion este fija (como hacer si no?)
+#' Y <- rZOIP(n=length(mu), mu = mu, sigma = sigma ,p0=p0,p1=p1,family=family)
+#' base<-data.frame(Y,Days,subject)
 #'
-#' base<-data.frame(Y,Days,Concentration.encoded,subject)
 #'
-#'
-#' formula.mu <- Y ~ log(Days) #+ I(log(Days)^2) + Concentration.encoded
+#' formula.mu <- Y ~ log(Days)
 #' formula.sigma<-~log(Days)
-#' formula.p0<-~1#log(Days)
-#' formula.p1<-~1#log(Days)
+#' formula.p0<-~1
+#' formula.p1<-~1
 #'
 #' formula.random=~1 | subject
 #'
@@ -74,6 +72,7 @@
 #' mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=base,
 #'               formula.random=formula.random,link=link,family=family,optimizer=optimizer,
 #'               n.points=n.points,pruning=pruning)
+#' mod
 #' @export
 
 
@@ -142,7 +141,6 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
 
   opt<-fit.ZOIPM(matri=matri,link=link,family=family,optimizer=optimizer)
 
-  opt$par
   theta0 <- c( opt$par, -1, -1)
   names(theta0) <- c(colnames(matri$mat.mu),colnames(matri$mat.sigma),colnames(matri$mat.p0),colnames(matri$mat.p1),"log(t1)","log(t2)")
 
@@ -176,6 +174,10 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
                                  control=list(eval.max=10000,iter.max=10000,trace=0,rel.tol=1e-5,x.tol=1e-3,xf.tol=1e-7),
                                  lower=lower.val,upper=upper.val)
   )
+  HM<-numDeriv::hessian(func=llM,x=fit$par,method='Richardson',
+                        Y=matri$y, mat.mu=matri$mat.mu, mat.sigma=matri$mat.sigma,
+                        mat.p0=matri$mat.p0, mat.p1=matri$mat.p1,inter.ran=matri$inter.ran,
+                        quad=quad, link=link, family=family)
 
   elem.mu<-fit$par[1:nparm.mu]
   elem.sigma<-fit$par[(nparm.mu+1):(nparm.mu+nparm.sigma)]
@@ -195,7 +197,7 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   names(elem.time)<-NULL
 
   result<-list(Fixed_Parameters.mu=NULL,Fixed_Parameters.sigma=NULL,Fixed_Parameters.p0=NULL,Fixed_Parameters.p1=NULL
-               ,Parameters.randoms=NULL,logverosimilitud=NULL,message=NULL,Time=NULL,num.iter=NULL)
+               ,Parameters.randoms=NULL,logverosimilitud=NULL,message=NULL,Time=NULL,num.iter=NULL,HM=NULL)
 
   result$Fixed_Parameters.mu <- elem.mu
   result$Fixed_Parameters.sigma <- elem.sigma
@@ -206,6 +208,10 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   result$Time <- elem.time
   result$message <- fit$message
   result$num.iter <- fit$iterations
+  result$HM<-HM
+
+  result$call <- match.call()
+  class(result)<-'ZOIPM'
 
   return(result)
 }
