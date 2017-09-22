@@ -121,7 +121,7 @@ summary.ZOIPM<-function(mod){
   printCoefmat(res[d,], P.value=TRUE, has.Pvalue=TRUE)
   cat("---------------------------------------------------------------\n")
   cat("---------------------------------------------------------------\n")
-  cat(paste("Random effects for mu and sigma"))
+  cat(paste("Random effects for mu and sigma \n",sep=''))
   cat("---------------------------------------------------------------\n")
   printCoefmat(res[e,], P.value=TRUE, has.Pvalue=TRUE)
   cat("---------------------------------------------------------------\n")
