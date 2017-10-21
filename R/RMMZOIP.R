@@ -1,24 +1,24 @@
-#' Modelo de Regresion mixto ZOIP
+#' ZOIP regression with mixed efects
 #'
-#' la funcion RMM.ZOIP ajusta un modelo de regresion mixto ZOIP con interceptos aletorios
-#' normales en el parametro de media y dispersion, la estimación se realiza via maxima verosimilitud
-#' y la cuadratura de gauss-hermite adaptativa con o sin pruning. el modelo puede incluir o no efectos
-#' fijos en cualquiera de sus parametros, asi como puede ser un modelo inflado bilateralmente, unilateralmente o sin parametros
-#' inflados.
+#' function RMM.ZOIP fits a mixed ZOIP regression model with random intercepts
+#' normals in the mean and dispersion parameter, the estimation is done via maximum likelihood
+#' and the gauss-hermite adaptive quadrangle with or without pruning. the model may or may not include effects
+#' fixed in any of its parameters, just as it can be a bilaterally inflated model, unilaterally or without parameters
+#' inflated.
 #'
 #'
 #' @usage RMM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,formula.random,link=c('identity','identity','identity','identity'),family='R-S',optimizer='nlminb',n.points=11,pruning=TRUE)
 #' @param formula.mu Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.
-#' @param formula.sigma Formula que define la funcion de regresion para sigma, p.e ~x1, es necesario definir la variable respuesta.
-#' @param formula.p0 Formula que define la funcion de regresion para p0, p.e ~x1, es necesario definir la variable respuesta.
-#' @param formula.p1 Formula que define la funcion de regresion para p1, p.e ~x1, es necesario definir la variable respuesta.
-#' @param data Datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
-#' @param link Eleccion de la funcion de enlace, se elige a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.
-#' @param family Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'
-#' @param optimizer Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.
-#' @param formula.random Formula que define el intercepto aleatorio a tener encuenta en la funcion, p.e formula.random= ~ 1 | X1.
-#' @param n.points numero de puntos a utilizar en la aproximacion por medio de la cuadratura de gauss-hermite adpatativa. por defecto es 11.
-#' @param pruning es un valor booleano que indica si se utilizara pruning o no. por defecto es TRUE.
+#' @param formula.sigma Formula que define la funcion de regresion para el parametro sigma, un valor posible es ~x1, por defecto ~1.
+#' @param formula.p0 Formula que define la funcion de regresion para p0, un valor posible es ~x1, por defecto ~1.
+#' @param formula.p1 Formula que define la funcion de regresion para p1, un valor posible es ~x1, por defecto ~1.
+#' @param data Es el conjunto de datos en formato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
+#' @param formula.random Formula que define el efecto mixto dentro del modelo, debe ser solo el intercepto aleatorio que se tendra en cuenta en el parametro de la media y la dispersion, la estructura admisible es la siguiente formula.random = ~1 | G1, donde G1 es la variable que indica los grupos o sujetos en el modelo, siempre debe ser definido.
+#' @param link Es un vector con las funciones enlace adecuadas para cada parametro a estimar de acuerdo a las opciones escogidas en los parametros de familia y formula. Si el modelo de regresion no posee covariables se debe utilizar como funcion enlace la opcion identity, independientemente del valor escogido en familia, opciones posibles son logit, log, por defecto link=c('identity','identity','identity','identity').
+#' @param family Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'.
+#' @param optimizer Eleccion del optimizador, utilizado para encontrar la convergencia de la maxima verosimilitud. se puede elegir el valor de 'nlminb' o 'optim', por defecto 'nlminb'.
+#' @param n.points Numero de puntos a utilizar en la aproximacion de la funcion de verosimilitud por medio de la cuadratura de Gauss-Hermite adaptativa multidimensional, por defecto es 11, se recomienda no dar un valor muy grande a este parametro, por que afectara de manera significativamente los tiempos de convergencia del modelo.
+#' @param pruning Es un valor booleano que indica si se utiliza pruning o no, para la cuadratura de Gauss-Hermite adaptativa multidimensional, por defecto es TRUE.
 #' @examples
 #'
 #' library(ZOIP)

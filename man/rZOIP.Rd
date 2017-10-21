@@ -34,11 +34,11 @@ de que x = 1, 0 ≤ p0 + p1 ≤ 1 y f(x; μ, sigma) representa algunas de las fu
 densidad de probabilidad para datos proporcionales, como la distribucion beta con sus diferentes parametrizaciones
 y la distribucion simplex.
 
-Cuando family='R-S' se utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008) el cual tiene una funcion de distribucion beta
-. mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
-family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto (2004), donde sigma=phi, phi es un parametro de precision.
+Cuando family='R-S' utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos(2005) el cual tiene una funcion de distribucion beta.
+mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
+family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto(2004), donde sigma=phi, phi es un parametro de precision.
 family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
-family='simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
+family='Simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
 }
 \examples{
 plot(density(rBEINF(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1, tau = 0.1)))

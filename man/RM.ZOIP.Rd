@@ -2,31 +2,31 @@
 % Please edit documentation in R/RMZOIP.R
 \name{RM.ZOIP}
 \alias{RM.ZOIP}
-\title{Regresion ZOIP}
+\title{ZOIP regression with fixed efects}
 \usage{
 RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
 }
 \arguments{
 \item{formula.mu}{Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.}
 
-\item{formula.sigma}{Formula que define la funcion de regresion para sigma, p.e ~x1, es necesario definir la variable respuesta.}
+\item{formula.sigma}{Formula que define la funcion de regresion para el parametro sigma, un valor posible es ~x1, por defecto ~1.}
 
-\item{formula.p0}{Formula que define la funcion de regresion para p0, p.e ~x1, es necesario definir la variable respuesta.}
+\item{formula.p0}{Formula que define la funcion de regresion para p0, un valor posible es ~x1, por defecto ~1.}
 
-\item{formula.p1}{Formula que define la funcion de regresion para p1, p.e ~x1, es necesario definir la variable respuesta.}
+\item{formula.p1}{Formula que define la funcion de regresion para p1, un valor posible es ~x1, por defecto ~1.}
 
-\item{data}{Datos en fomato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.}
+\item{data}{Es el conjunto de datos en formato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.}
 
-\item{link}{Eleccion de la funcion de enlace, se elige a cada parametro a estimar de acuerdo a las opciones de familia y formula, ver detalles y vignettes.}
+\item{link}{Es un vector con las funciones enlace adecuadas para cada parametro a estimar de acuerdo a las opciones escogidas en los parametros de familia y formula. Si el modelo de regresion no posee covariables se debe utilizar como funcion enlace la opcion identity, independientemente del valor escogido en familia, opciones posibles son logit, log, por defecto link=c('identity','identity','identity','identity').}
 
-\item{family}{Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'}
+\item{family}{Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'.}
 
-\item{optimizer}{Eleccion del optimizador, utilizado para la convergencia de la maxima verosimilitud.}
+\item{optimizer}{Eleccion del optimizador, utilizado para encontrar la convergencia de la maxima verosimilitud. se puede elegir el valor de 'nlminb' o 'optim', por defecto 'nlminb'.}
 }
 \description{
-la funcion RM.ZOIP ajusta un modelo de regresion ZOIP via maxima verosimilitud. el modelo puede incluir o no
-covariables en cualquiera de sus parametros, asi como puede ser un modelo inflado bilateralmente, unilateralmente o sin parametros
-inflados
+The RM.ZOIP function adjusts a ZOIP regression model via maximum likelihood. the model may or may not include
+covariables in any of its parameters, just as it can be a bilaterally inflated model, unilaterally or without parameters
+of inflation
 }
 \examples{
 
