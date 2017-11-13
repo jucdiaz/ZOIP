@@ -68,4 +68,3 @@ mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formu
 summary(mod)
 
 }
-

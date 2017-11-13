@@ -80,4 +80,3 @@ plot(density(a2))
 plot(density(a3))
 plot(density(a4))
 }
-

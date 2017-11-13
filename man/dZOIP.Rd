@@ -52,4 +52,3 @@ dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 =0.2,family='R-S',log = FALSE)
 dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 =0,family='R-S',log = FALSE)
 
 }
-

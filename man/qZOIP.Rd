@@ -63,4 +63,3 @@ qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='F-C',log = FALSE)
 qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0, p1 = 0,family='Original',log = FALSE)
 qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0, p1 = 0,family='Simplex',log = FALSE)
 }
-
