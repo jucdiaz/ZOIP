@@ -2,7 +2,7 @@
 % Please edit documentation in R/dZOIP.R
 \name{dZOIP}
 \alias{dZOIP}
-\title{Distribucion ZOIP}
+\title{ZOIP Distribution}
 \usage{
 dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
 pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
@@ -28,11 +28,11 @@ rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 La funcion dZOIP define la funcion de densidad de probabilidad de la distribucion ZOIP.
 }
 \details{
-x tiene distribucion ZOIP con parametros de forma "mu", de escala "sigma", de proporcion de ceros "p0" y de proporcion de unos "p1",
-si tiene densidad: p0 si x=0, p1 si x=1, (1-p0-p1)f(x;mu,sigma)) si 0<x<1.
+x tiene distribucion ZOIP con parametros de forma "\eqn{\mu}", de escala "\eqn{\sigma}", de proporcion de ceros "\eqn{p_0}" y de proporcion de unos "\eqn{p_1}",
+tiene densidad: \eqn{p_0} si x=0, \eqn{p_1} si x=1, \eqn{(1-p_0-p_1)f(x;\mu,\sigma)} si \eqn{0<x<1}.
 
 donde p0 ≥ 0 representa la probabilidad que x = 0, p1 ≥ 0 representa la probabilidad
-de que x = 1, 0 ≤ p0 + p1 ≤ 1 y f(x; μ, sigma) representa algunas de las funciones de
+de que x = 1, 0 ≤ p0 + p1 ≤ 1 y f(x; mu, sigma) representa algunas de las funciones de
 densidad de probabilidad para datos proporcionales, como la distribucion beta con sus diferentes parametrizaciones
 y la distribucion simplex.
 
