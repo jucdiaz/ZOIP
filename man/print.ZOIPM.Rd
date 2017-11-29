@@ -13,7 +13,7 @@
 print a ZOIP model mixed.
 }
 \examples{
-#' library(ZOIP)
+library(ZOIP)
 N<-21
 
 Times <- c(2, 10, 20, 40) # cantidad de dias

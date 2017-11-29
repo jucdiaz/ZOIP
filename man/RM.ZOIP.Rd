@@ -31,6 +31,7 @@ of inflation
 \examples{
 
 #Test 1--------------------------------------------------
+library(ZOIP)
 library(boot)
 library(numDeriv)
 n<-1000

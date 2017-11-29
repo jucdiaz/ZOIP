@@ -27,15 +27,7 @@
 #' @param p1 Parameter of proportion of ones.
 #' @param family choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.
 #' @examples
-#' plot(density(rBEINF(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1, tau = 0.1)))
-#' plot(density(rZOIP(n=1000, mu = 0.5, sigma = 0.1)))
-#' plot(density(rBEINF0(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1)))
-#' plot(density(rZOIP(n=1000, mu = 0.5, sigma = 0.1,p0=0.09090909091,p1=0)))
-#' plot(density(rBEINF1(n=1000, mu = 0.5, sigma = 0.1, nu = 0.1)))
-#' plot(density(rZOIP(n=1000, mu = 0.5, sigma = 0.1,p0=0,p1=0.09090909091)))
-#' plot(density(rbeta(n=1000,0.6,2.4)))
-#' plot(density(rZOIP(n=1000, mu = 0.6, sigma =2.4,p0=0,p1=0,family='Original')))
-#'
+#' library(ZOIP)
 #' a1<-rZOIP(n=1000, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S')
 #' a2<-rZOIP(n=1000, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C')
 #' a3<-rZOIP(n=1000, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original')

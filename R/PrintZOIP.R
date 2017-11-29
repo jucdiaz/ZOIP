@@ -7,7 +7,8 @@
 #' @examples
 #'
 #' #Test 1--------------------------------------------------
-#'
+#' library(ZOIP)
+#' library(boot)
 #' n<-1000
 #' x1<-runif(n)
 #' x2<-runif(n)
@@ -15,12 +16,12 @@
 #' b1<-0.3
 #' b2<--0.5
 #' b3<-0.9
-#' sigma_i<-exp(b1+b2*x1+b3*x2)
+#' sigma_i<-inv.logit(b1+b2*x1+b3*x2)
 #'
 #' c1<-0.2
 #' c2<--1
 #' c3<-0.1
-#' mu_i<-exp(c1+c2*x1)
+#' mu_i<-inv.logit(c1+c2*x1)
 #'
 #' d1<-0.07
 #' p0_i<-rep(d1,length(n))

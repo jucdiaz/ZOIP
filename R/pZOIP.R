@@ -29,6 +29,7 @@
 #' @param log.p logical; if TRUE, the probabilities of p will be given as log (p).
 #' @param lower.tail logical; if TRUE (default), probabilities will be P [X <= x], otherwise, P [X> x].
 #' @examples
+#' library(ZOIP)
 #' pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
 #' pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
 #' pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
