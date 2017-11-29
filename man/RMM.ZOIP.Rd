@@ -7,27 +7,27 @@
 RMM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,formula.random,link=c('identity','identity','identity','identity'),family='R-S',optimizer='nlminb',n.points=11,pruning=TRUE)
 }
 \arguments{
-\item{formula.mu}{Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.}
+\item{formula.mu}{Formula that defines the regression function for mu, p.e and ~ x1 + x2, it is necessary to define the response variable.}
 
-\item{formula.sigma}{Formula que define la funcion de regresion para el parametro sigma, un valor posible es ~x1, por defecto ~1.}
+\item{formula.sigma}{Formula that defines the regression function for the sigma parameter, a possible value is ~ x1, by default ~ 1.}
 
-\item{formula.p0}{Formula que define la funcion de regresion para p0, un valor posible es ~x1, por defecto ~1.}
+\item{formula.p0}{Formula that defines the regression function for p0, a possible value is ~ x1, by default ~ 1.}
 
-\item{formula.p1}{Formula que define la funcion de regresion para p1, un valor posible es ~x1, por defecto ~1.}
+\item{formula.p1}{Formula that defines the regression function for p1, a possible value is ~ x1, by default ~ 1.}
 
-\item{data}{Es el conjunto de datos en formato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.}
+\item{data}{It is the data set in data.frame format where it must contain the names of the columns as they are in the formulas.}
 
-\item{formula.random}{Formula que define el efecto mixto dentro del modelo, debe ser solo el intercepto aleatorio que se tendra en cuenta en el parametro de la media y la dispersion, la estructura admisible es la siguiente formula.random = ~1 | G1, donde G1 es la variable que indica los grupos o sujetos en el modelo, siempre debe ser definido.}
+\item{formula.random}{Formula that defines the mixed effect within the model, it should be only the random intercept that will be taken into account in the parameter of the mean and the dispersion, the admissible structure is the following formula.random = ~ 1 | G1, where G1 is the variable that indicates the groups or subjects in the model, should always be defined.}
 
-\item{link}{Es un vector con las funciones enlace adecuadas para cada parametro a estimar de acuerdo a las opciones escogidas en los parametros de familia y formula. Si el modelo de regresion no posee covariables se debe utilizar como funcion enlace la opcion identity, independientemente del valor escogido en familia, opciones posibles son logit, log, por defecto link=c('identity','identity','identity','identity').}
+\item{link}{It is a vector with the appropriate link functions for each parameter to be estimated according to the options chosen in the family and formula parameters. If the regression model does not have covariables, the identity option should be used as a link function, regardless of the value chosen in the family, possible options are logit, log, default link = c ('identity', 'identity', 'identity', 'identity').}
 
-\item{family}{Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'.}
+\item{family}{choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.}
 
-\item{optimizer}{Eleccion del optimizador, utilizado para encontrar la convergencia de la maxima verosimilitud. se puede elegir el valor de 'nlminb' o 'optim', por defecto 'nlminb'.}
+\item{optimizer}{Choice of the optimizer, used to find the convergence of the maximum likelihood. you can choose the value of 'nlminb' or 'optim', by default 'nlminb'.}
 
-\item{n.points}{Numero de puntos a utilizar en la aproximacion de la funcion de verosimilitud por medio de la cuadratura de Gauss-Hermite adaptativa multidimensional, por defecto es 11, se recomienda no dar un valor muy grande a este parametro, por que afectara de manera significativamente los tiempos de convergencia del modelo.}
+\item{n.points}{Number of points to use in the approximation of the likelihood function by means of quadrature Gauss-Hermite adaptive multidimensional, by default is 11, it is recommended not to give a very large value to this parameter, because it will significantly affect the times of convergence of the model.}
 
-\item{pruning}{Es un valor booleano que indica si se utiliza pruning o no, para la cuadratura de Gauss-Hermite adaptativa multidimensional, por defecto es TRUE.}
+\item{pruning}{It is a Boolean value that indicates if pruning is used or not, for the quadrature of multidimensional Adaptive Gauss-Hermite, by default it is TRUE.}
 }
 \description{
 function RMM.ZOIP fits a mixed ZOIP regression model with random intercepts

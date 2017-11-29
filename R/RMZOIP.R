@@ -6,14 +6,14 @@
 #'
 #'
 #' @usage RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
-#' @param formula.mu Formula que define la funcion de regresion para mu, p.e y~x1+x2, es necesario definir la variable respuesta.
-#' @param formula.sigma Formula que define la funcion de regresion para el parametro sigma, un valor posible es ~x1, por defecto ~1.
-#' @param formula.p0 Formula que define la funcion de regresion para p0, un valor posible es ~x1, por defecto ~1.
-#' @param formula.p1 Formula que define la funcion de regresion para p1, un valor posible es ~x1, por defecto ~1.
-#' @param data Es el conjunto de datos en formato data.frame donde debe contener las nombres de las columnas tal cual como estan en las formulas.
-#' @param link Es un vector con las funciones enlace adecuadas para cada parametro a estimar de acuerdo a las opciones escogidas en los parametros de familia y formula. Si el modelo de regresion no posee covariables se debe utilizar como funcion enlace la opcion identity, independientemente del valor escogido en familia, opciones posibles son logit, log, por defecto link=c('identity','identity','identity','identity').
-#' @param family Eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex. por defecto 'R-S'.
-#' @param optimizer Eleccion del optimizador, utilizado para encontrar la convergencia de la maxima verosimilitud. se puede elegir el valor de 'nlminb' o 'optim', por defecto 'nlminb'.
+#' @param formula.mu Formula that defines the regression function for mu, p.e and ~ x1 + x2, it is necessary to define the response variable.
+#' @param formula.sigma Formula that defines the regression function for the sigma parameter, a possible value is ~ x1, by default ~ 1.
+#' @param formula.p0 Formula that defines the regression function for p0, a possible value is ~ x1, by default ~ 1.
+#' @param formula.p1 Formula that defines the regression function for p1, a possible value is ~ x1, by default ~ 1.
+#' @param data It is the data set in data.frame format where it must contain the names of the columns as they are in the formulas.
+#' @param link It is a vector with the appropriate link functions for each parameter to be estimated according to the options chosen in the family and formula parameters. If the regression model does not have covariables, the identity option should be used as a link function, regardless of the value chosen in the family, possible options are logit, log, default link = c ('identity', 'identity', 'identity', 'identity').
+#' @param family choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.
+#' @param optimizer Choice of the optimizer, used to find the convergence of the maximum likelihood. you can choose the value of 'nlminb' or 'optim', by default 'nlminb'.
 #' @examples
 #'
 #' #Test 1--------------------------------------------------

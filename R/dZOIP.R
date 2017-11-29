@@ -1,33 +1,32 @@
 #' ZOIP Distribution
 #'
-#'La funcion dZOIP define la funcion de densidad de probabilidad de la distribucion ZOIP.
+#'The dZOIP function defines the probability density function of the ZOIP distribution.
 #'
-#'x tiene distribucion ZOIP con parametros de forma "\eqn{\mu}", de escala "\eqn{\sigma}", de proporcion de ceros "\eqn{p_0}" y de proporcion de unos "\eqn{p_1}",
-#'tiene densidad: \eqn{p_0} si x=0, \eqn{p_1} si x=1, \eqn{(1-p_0-p_1)f(x;\mu,\sigma)} si \eqn{0<x<1}.
+#'x has ZOIP distribution with shape parameters "\eqn{\mu}", scale "\eqn{\sigma}", proportion of zeros "\eqn{p0}" and proportion of ones "\eqn{ p1} ",
+#'has density: \eqn{p0} if \eqn{x = 0}, \eqn{p1} if \eqn{x = 1}, \eqn{(1-p0-p1) f (x; \mu, \sigma)} yes \eqn{0 <x <1}.
 #'
-#'donde p0 ≥ 0 representa la probabilidad que x = 0, p1 ≥ 0 representa la probabilidad
-#'de que x = 1, 0 ≤ p0 + p1 ≤ 1 y f(x; mu, sigma) representa algunas de las funciones de
-#'densidad de probabilidad para datos proporcionales, como la distribucion beta con sus diferentes parametrizaciones
-#'y la distribucion simplex.
+#'where \eqn{p0 ≥ 0} represents the probability that \eqn{x = 0, p1 ≥ 0} represents the probability
+#'that \eqn{x = 1, 0 ≤ p0 + p1 ≤ 1} and \eqn{f (x; \mu, \sigma)} represents some of the functions of
+#'probability density for proportional data, such as the beta distribution with its different parameterizations
+#'and the simplex distribution.
 #'
-#'Cuando family='R-S' utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos(2005) el cual tiene una funcion de distribucion beta.
-#'mu es el parametro de media y forma, ademas sigma es el parametro de dispersion de la distribucion.
-#'family='F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto(2004), donde sigma=phi, phi es un parametro de precision.
-#'family='Original' distribucion beta parametrizacion original donde mu=a, a parametro de forma 1; sigma=b, b parametro de forma 2.
-#'family='Simplex' distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991)'
+#'When family =' R-S 'uses the beta distribution with beta parameterization Rigby and Stasinopoulos (2005) which has a beta distribution function.
+#'\eqn{\mu} is the parameter of mean and shape, plus \eqn{\sigma} is the dispersion parameter of the distribution.
+#'family =' F-C 'distribution Beta parametrization Ferrari and Cribari-Neto (2004), where \eqn{\sigma = \phi}, \eqn{\phi} is a precision parameter.
+#'family =' Original 'beta distribution original parametrization where \eqn{\mu = a}, a parameter of form 1; \eqn{\sigma = b}, b parameter of form 2.
+#'family =' Simplex 'simplex distribution. proposed by Barndorff-Nielsen and Jørgensen (1991)
 #'
 #' @usage dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
 #' pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
 #' qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
 #' rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
-#' @param x vector de cuantiles.
-#' @param mu vector de parametros de localizacion.
-#' @param sigma vector de parametros de escala.
-#' @param p0 parametro de proporcion de ceros.
-#' @param p1 parametro de proporcion de unos.
-#' @param family eleccion de la parametrizacion o distribucion deseada, family='R-S' parametrizacion distribucion beta Rigby y Stasinopoulos, 'F-C' distribucion Beta parametrizacion Ferrari y Cribari-Neto, Original distribucion beta parametrizacion original, 'Simplex' distribucion simplex.
-#' @param log logico; si TRUE, las probabilidades de p estaran dadas como log(p).
-#' @export
+#' @param x quantiles vector.
+#' @param mu vector of location parameters.
+#' @param sigma vector of scale parameters.
+#' @param p0 parameter of proportion of zeros.
+#' @param p1 Parameter of proportion of ones.
+#' @param family choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.
+#' @param log logical; if TRUE, the probabilities of p will be given as log (p).
 #' @examples
 #'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 =0.2,family='R-S',log = FALSE)
 #'dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
@@ -36,7 +35,9 @@
 #'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 =0,family='R-S',log = FALSE)
 #'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 =0.2,family='R-S',log = FALSE)
 #'dZOIP(x=0.5, mu = 0.2, sigma = 0.5, p0 = 0, p1 =0,family='R-S',log = FALSE)
-#'
+#' @export
+
+
 dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE) {
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
     stop(paste("family must be in R-S, F-C, Original, Simplex", "\n", ""))
