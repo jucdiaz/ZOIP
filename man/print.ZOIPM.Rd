@@ -4,21 +4,24 @@
 \alias{print.ZOIPM}
 \title{print.ZOIPM}
 \usage{
-\method{print}{ZOIPM}(mod)
+\method{print}{ZOIPM}(x, ...)
 }
 \arguments{
-\item{mod}{An object of class \code{ZOIPM}.}
+\item{x}{An object of class \code{ZOIPM}.}
+
+\item{...}{other arguments.}
 }
 \description{
 print a ZOIP model mixed.
 }
 \examples{
+
 library(ZOIP)
-N<-21
+N<-15
 
-Times <- c(2, 10, 20, 40) # cantidad de dias
+Times <- c(2, 10, 20)
 
-subject <- rep(1:N, each=length(Times)) # numero de sujetos en la muestra repetidos tantas veces haya dias
+subject <- rep(1:N, each=length(Times))
 
 Days <- rep(Times, times=N)
 b0i <- rep(rnorm(n=N,sd=1), each=length(Times))
@@ -61,9 +64,9 @@ optimizer<-'nlminb'
 n.points <-11
 pruning <- TRUE
 
-mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=base,
-              formula.random=formula.random,link=link,family=family,optimizer=optimizer,
-              n.points=n.points,pruning=pruning)
+mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,
+              formula.p1=formula.p1,data=base,formula.random=formula.random,link=link,
+              family=family,optimizer=optimizer,n.points=n.points,pruning=pruning)
 mod
 
 }

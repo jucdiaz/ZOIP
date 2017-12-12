@@ -5,7 +5,6 @@
 #' of inflation
 #'
 #'
-#' @usage RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S')
 #' @param formula.mu Formula that defines the regression function for mu, p.e and ~ x1 + x2, it is necessary to define the response variable.
 #' @param formula.sigma Formula that defines the regression function for the sigma parameter, a possible value is ~ x1, by default ~ 1.
 #' @param formula.p0 Formula that defines the regression function for p0, a possible value is ~ x1, by default ~ 1.
@@ -21,8 +20,8 @@
 #' library(boot)
 #' library(numDeriv)
 #' n<-1000
-#' x1<-runif(n)
-#' x2<-runif(n)
+#' x1<-stats::runif(n)
+#' x2<-stats::runif(n)
 #'
 #' b1<-0.3
 #' b2<--0.5
@@ -39,11 +38,12 @@
 #'
 #' e1<-0.02
 #' e2<--4
-#' p1_i<-inv.logit(e1+e2*x2)
+#' p1_i<-boot::inv.logit(e1+e2*x2)
 #'
 #' param<-cbind(mu_i,sigma_i,p0_i,p1_i)
 #'
-#' system.time(y_i<-apply(param,1,function(x){rZOIP(1,mu=x[1],sigma=x[2],p0=x[3],p1=x[4],family='Original')}))
+#' system.time(y_i<-apply(param,1,function(x){rZOIP(1,mu=x[1],sigma=x[2],
+#'                                                  p0=x[3],p1=x[4],family='Original')}))
 #' data<-as.data.frame(cbind(y_i,x1,x2))
 #'
 #' formula.mu=y_i~x1
@@ -52,63 +52,25 @@
 #' formula.p1=~x2
 #' link=c('log','log','identity','logit')
 #' family='Original'
-#' mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=data,link=link,family=family)
+#' mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,
+#'              formula.p1=formula.p1,data=data,link=link,family=family)
 #' mod
 #' summary(mod)
 #'
-#' #Test 2--------------------------------------------------
-#'
-#' n<-1000
-#' x1<-runif(n)
-#' x2<-runif(n)
-#'
-#' b1<-0.3
-#' b2<--0.5
-#' b3<-0.9
-#' sigma_i<-exp(b1+b2*x1+b3*x2)
-#'
-#' c1<-0.2
-#' c2<--1
-#' c3<-0.1
-#' mu_i<-exp(c1+c2*x1)
-#'
-#' d1<-0.07
-#' p0_i<-rep(d1,length(n))
-#'
-#' d1<-0
-#' p1_i<-rep(d1,length(n))
-#'
-#'
-#' param<-cbind(mu_i,sigma_i,p0_i,p1_i)
-#'
-#' system.time(y_i<-apply(param,1,function(x){rZOIP(1,mu=x[1],sigma=x[2],p0=x[3],p1=x[4],family='Original')}))
-#' data<-as.data.frame(cbind(y_i,x1,x2))
-#'
-#' formula.mu=y_i~x1
-#' formula.sigma=~x1+x2
-#' formula.p0=~1
-#' formula.p1=~1
-#' link=c('log','log','identity','identity')
-#' family='Original'
-#' mod<-RM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=data,link=link,family=family)
-#' mod
-#' summary(mod)
 #'
 #' @export
 
 
 RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,link=c('identity','identity','identity','identity'),family='R-S',optimizer='nlminb'){
-  library(boot)
-  library(numDeriv)
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
     stop(paste("family must be in R-S, F-C, Original, Simplex", "\n", ""))
-  if(any(length(as.character(attr(terms(formula.mu),'variable')))==1))
+  if(any(length(as.character(attr(stats::terms(formula.mu),'variable')))==1))
     stop(paste("formula.mu must have response variable","\n",""))
-  if(any(attr(terms(formula.sigma),'response')>=1))
+  if(any(attr(stats::terms(formula.sigma),'response')>=1))
     stop(paste("sigma can't have response variable in formula.sigma","\n",""))
-  if(any(attr(terms(formula.p0),'response')>=1))
+  if(any(attr(stats::terms(formula.p0),'response')>=1))
     stop(paste("p0 can't have response variable in formula.p0","\n",""))
-  if(any(attr(terms(formula.p1),'response')>=1))
+  if(any(attr(stats::terms(formula.p1),'response')>=1))
     stop(paste("p1 can't have response variable in formula.p1","\n",""))
   if(any(dim(data)[2])<1)
     stop(paste("Object 'data' must have data"),"\n","")
@@ -124,25 +86,25 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
     stop(paste("link for p0 must be in identity, logit", "\n",""))
   if(any(link[4]!='identity' && link[4]!='logit'))
     stop(paste("link for p1 must be in identity, logit", "\n",""))
-  if(any(length(as.character(attr(terms(formula.mu),'variable')))==2 && link[1]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.mu),'variable')))==2 && link[1]!='identity'))
     stop(paste("mu don't have covariables then link must be identity", "\n",""))
-  if(any(family!='Original' && length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='logit'))
+  if(any(family!='Original' && length(as.character(attr(stats::terms(formula.mu),'variable')))>2 && link[1]!='logit'))
     stop(paste("If family is diferent a Original and mu have covariables then link must be logit", "\n",""))
-  if(any(family=='Original'&& length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='log'))
+  if(any(family=='Original'&& length(as.character(attr(stats::terms(formula.mu),'variable')))>2 && link[1]!='log'))
     stop(paste("If family is Original and mu have covariables then link must be log", "\n",""))
-  if(any(length(as.character(attr(terms(formula.sigma),'variable')))==1 && link[2]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.sigma),'variable')))==1 && link[2]!='identity'))
     stop(paste("sigma don't have covariables then link must be identity", "\n",""))
-  if(any(family!='R-S' && length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='log'))
+  if(any(family!='R-S' && length(as.character(attr(stats::terms(formula.sigma),'variable')))>1 && link[2]!='log'))
     stop(paste("If family is diferent a R-S and sigma have covariables then link must be log", "\n",""))
-  if(any(family=='R-S'&& length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='logit'))
+  if(any(family=='R-S'&& length(as.character(attr(stats::terms(formula.sigma),'variable')))>1 && link[2]!='logit'))
     stop(paste("If family is R-S and sigma have covariables then link must be logit", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p0),'variable')))==1 && link[3]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.p0),'variable')))==1 && link[3]!='identity'))
     stop(paste("p0 don't have covariables then link must be identity", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p0),'variable')))>1 && link[3]!='logit'))
+  if(any(length(as.character(attr(stats::terms(formula.p0),'variable')))>1 && link[3]!='logit'))
     stop(paste("p0 have covariables then link must be logit", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p1),'variable')))==1 && link[4]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.p1),'variable')))==1 && link[4]!='identity'))
     stop(paste("p1 don't have covariables then link must be identity", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p1),'variable')))>1 && link[4]!='logit'))
+  if(any(length(as.character(attr(stats::terms(formula.p1),'variable')))>1 && link[4]!='logit'))
     stop(paste("p1 have covariables then link must be logit", "\n",""))
   if(any(optimizer!='nlminb' && optimizer!='optim'))
     stop(paste("optimizer should be 'nlminb' or 'optim'", "\n",""))
@@ -185,7 +147,7 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   }
 
 
-  Result<-list(par=NULL,Convergence=NULL,message=NULL,iterations=NULL,HM=NULL,nparm=NULL,Vec_Bool=NULL,objective=NULL)
+  Result<-list(par=NULL,Convergence=NULL,message=NULL,iterations=NULL,HM=NULL,nparm=NULL,Vec_Bool=NULL,objective=NULL,link=NULL)
 
   Result[[1]]<-opt$par
   Result[[2]]<-opt$convergence
@@ -195,6 +157,7 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   Result[[6]]<-c(nparm.mu,nparm.sigma,nparm.p0,nparm.p1)
   Result[[7]]<-Vec_Bool
   Result[[8]]<-opt$objective
+  Result[[9]]<-link
 
 
   Result$call <- match.call()
@@ -232,7 +195,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
               rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1))
 
   if (optimizer == 'nlminb') {
-    opt <- nlminb(start=val.inic, objective=ll.ZOIP2,
+    opt <- stats::nlminb(start=val.inic, objective=ll.ZOIP2,
                   y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                   link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$objective
@@ -240,7 +203,7 @@ fit.ZOIP2<-function(matri,link,family,optimizer){
 
   if (optimizer == 'optim') {
 
-    opt <- optim(par=val.inic, fn=ll.ZOIP2,
+    opt <- stats::optim(par=val.inic, fn=ll.ZOIP2,
                  y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                  link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$value
@@ -306,17 +269,17 @@ model.matrix.ZOIP <- function(formula.mu,formula.sigma,formula.p0,formula.p1, da
   stopifnot (class(formula.p0) == 'formula')
   stopifnot (class(formula.p1) == 'formula')
   response <- all.vars(formula.mu)[1]
-  formula.sigma <- as.formula(paste(response, paste(as.character(formula.sigma),
+  formula.sigma <- stats::as.formula(paste(response, paste(as.character(formula.sigma),
                                                     collapse='')))
-  formula.p0 <- as.formula(paste(response, paste(as.character(formula.p0),
+  formula.p0 <- stats::as.formula(paste(response, paste(as.character(formula.p0),
                                                  collapse='')))
-  formula.p1 <- as.formula(paste(response, paste(as.character(formula.p1),
+  formula.p1 <- stats::as.formula(paste(response, paste(as.character(formula.p1),
                                                  collapse='')))
-  mat.mu <- model.matrix(formula.mu, data)
-  mat.sigma <- model.matrix(formula.sigma, data)
-  mat.p0 <- model.matrix(formula.p0, data)
-  mat.p1 <- model.matrix(formula.p1, data)
-  y <- model.frame(formula.mu, data=data)[, 1]
+  mat.mu <- stats::model.matrix(formula.mu, data)
+  mat.sigma <- stats::model.matrix(formula.sigma, data)
+  mat.p0 <- stats::model.matrix(formula.p0, data)
+  mat.p1 <- stats::model.matrix(formula.p1, data)
+  y <- stats::model.frame(formula.mu, data=data)[, 1]
   matri<-list(mat.mu=mat.mu, mat.sigma=mat.sigma,mat.p0=mat.p0,mat.p1=mat.p1, y=y)
   return(matri)
 }

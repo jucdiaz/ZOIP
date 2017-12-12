@@ -16,18 +16,14 @@
 #'family =' Original 'beta distribution original parametrization where \eqn{\mu = a}, a parameter of form 1; \eqn{\sigma = b}, b parameter of form 2.
 #'family =' Simplex 'simplex distribution. proposed by Barndorff-Nielsen and Jørgensen (1991)
 #'
-#' @usage dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
-#' pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 #' @param q quantiles vector.
 #' @param mu vector of location parameters.
 #' @param sigma vector of scale parameters.
 #' @param p0 parameter of proportion of zeros.
 #' @param p1 Parameter of proportion of ones.
 #' @param family choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.
-#' @param log.p logical; if TRUE, the probabilities of p will be given as log (p).
 #' @param lower.tail logical; if TRUE (default), probabilities will be P [X <= x], otherwise, P [X> x].
+#' @param log.p logical; if TRUE, the probabilities of p will be given as log (p).
 #' @examples
 #' library(ZOIP)
 #' pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
@@ -97,7 +93,7 @@ pZOIP<-function (q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     nu<-0
     tau<-0
   }
-  if(family != 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + pbeta(q, shape1 = a,
+  if(family != 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + stats::pbeta(q, shape1 = a,
                                                                     shape2 = b, ncp = 0, lower.tail = TRUE, log.p = FALSE),
                                         0)}
   if(family == 'Simplex'){cdf <- ifelse((q > 0 & q < 1), nu + rmutil::psimplex(q, m=mu, s=sigma),0)}

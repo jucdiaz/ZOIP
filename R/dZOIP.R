@@ -16,10 +16,6 @@
 #'family =' Original 'beta distribution original parametrization where \eqn{\mu = a}, a parameter of form 1; \eqn{\sigma = b}, b parameter of form 2.
 #'family =' Simplex 'simplex distribution. proposed by Barndorff-Nielsen and Jørgensen (1991)
 #'
-#' @usage dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
-#' pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 #' @param x quantiles vector.
 #' @param mu vector of location parameters.
 #' @param sigma vector of scale parameters.
@@ -82,7 +78,7 @@ dZOIP<-function (x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
     tau <- p1/(1-p0-p1)
   }
   logfy <- rep(0, length(x))
-  if(family != 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dbeta(x, shape1 = a, shape2 = b
+  if(family != 'Simplex'){logfy <- ifelse((x > 0 & x < 1), stats::dbeta(x, shape1 = a, shape2 = b
                                                                  , ncp = 0, log = TRUE), 0)}
 
   if(family == 'Simplex'){logfy <- ifelse((x > 0 & x < 1), dsim2(x, m = mu, s = sigma, log = TRUE), 0)}

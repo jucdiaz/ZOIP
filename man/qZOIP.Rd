@@ -4,10 +4,8 @@
 \alias{qZOIP}
 \title{ZOIP Distribution}
 \usage{
-dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
-pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
+qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,
+  family = "R-S", lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
 \item{p}{vector of probabilities.}
@@ -22,7 +20,9 @@ rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 
 \item{family}{choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.}
 
-\item{log}{logical; if TRUE, the probabilities of p will be given as log (p).}
+\item{lower.tail}{logical; if TRUE (default), probabilities will be P [X <= x], otherwise, P [X> x].}
+
+\item{log.p}{logical; if TRUE, the probabilities of p will be given as log (p).}
 }
 \description{
 The qZOIP function defines the quantile function of the ZOIP distribution.

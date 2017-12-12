@@ -16,10 +16,6 @@
 #'family =' Original 'beta distribution original parametrization where \eqn{\mu = a}, a parameter of form 1; \eqn{\sigma = b}, b parameter of form 2.
 #'family =' Simplex 'simplex distribution. proposed by Barndorff-Nielsen and Jørgensen (1991)
 #'
-#' @usage dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
-#' pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 #' @param n number of observations. If length (n)> 1, the length is taken to be the number required.
 #' @param mu vector of location parameters.
 #' @param sigma vector of scale parameters.
@@ -82,7 +78,7 @@ rZOIP<-function (n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,famil
   if (any(n <= 0))
     stop(paste("n must be a positive integer", "\n", ""))
   n <- ceiling(n)
-  p <- runif(n)
+  p <- stats::runif(n)
   r <- qZOIP(p, mu = mu, sigma = sigma, p0 = p0, p1 = p1, family=family)
   r
 }

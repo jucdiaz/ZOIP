@@ -7,7 +7,6 @@
 #' inflated.
 #'
 #'
-#' @usage RMM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,formula.random,link=c('identity','identity','identity','identity'),family='R-S',optimizer='nlminb',n.points=11,pruning=TRUE)
 #' @param formula.mu Formula that defines the regression function for mu, p.e and ~ x1 + x2, it is necessary to define the response variable.
 #' @param formula.sigma Formula that defines the regression function for the sigma parameter, a possible value is ~ x1, by default ~ 1.
 #' @param formula.p0 Formula that defines the regression function for p0, a possible value is ~ x1, by default ~ 1.
@@ -22,11 +21,11 @@
 #' @examples
 #'
 #' library(ZOIP)
-#' N<-21
+#' N<-15
 #'
-#' Times <- c(2, 10, 20, 40) # cantidad de dias
+#' Times <- c(2, 10, 20)
 #'
-#' subject <- rep(1:N, each=length(Times)) # numero de sujetos en la muestra repetidos tantas veces haya dias
+#' subject <- rep(1:N, each=length(Times))
 #'
 #' Days <- rep(Times, times=N)
 #' b0i <- rep(rnorm(n=N,sd=1), each=length(Times))
@@ -69,9 +68,9 @@
 #' n.points <-11
 #' pruning <- TRUE
 #'
-#' mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1,data=base,
-#'               formula.random=formula.random,link=link,family=family,optimizer=optimizer,
-#'               n.points=n.points,pruning=pruning)
+#' mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,
+#'               formula.p1=formula.p1,data=base,formula.random=formula.random,link=link,
+#'               family=family,optimizer=optimizer,n.points=n.points,pruning=pruning)
 #' mod
 #' @export
 
@@ -82,13 +81,13 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
 
   if (any(family != 'R-S') && any(family != 'F-C') && any(family != 'Original') && any(family != 'Simplex'))
     stop(paste("family must be in R-S, F-C, Original, Simplex", "\n", ""))
-  if(any(length(as.character(attr(terms(formula.mu),'variable')))==1))
+  if(any(length(as.character(attr(stats::terms(formula.mu),'variable')))==1))
     stop(paste("formula.mu must have response variable","\n",""))
-  if(any(attr(terms(formula.sigma),'response')>=1))
+  if(any(attr(stats::terms(formula.sigma),'response')>=1))
     stop(paste("sigma can't have response variable in formula.sigma","\n",""))
-  if(any(attr(terms(formula.p0),'response')>=1))
+  if(any(attr(stats::terms(formula.p0),'response')>=1))
     stop(paste("p0 can't have response variable in formula.p0","\n",""))
-  if(any(attr(terms(formula.p1),'response')>=1))
+  if(any(attr(stats::terms(formula.p1),'response')>=1))
     stop(paste("p1 can't have response variable in formula.p1","\n",""))
   if(any(dim(data)[2])<1)
     stop(paste("Object 'data' must have data"),"\n","")
@@ -104,38 +103,38 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
     stop(paste("link for p0 must be in identity, logit", "\n",""))
   if(any(link[4]!='identity' && link[4]!='logit'))
     stop(paste("link for p1 must be in identity, logit", "\n",""))
-  if(any(length(as.character(attr(terms(formula.mu),'variable')))==2 && link[1]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.mu),'variable')))==2 && link[1]!='identity'))
     stop(paste("mu don't have covariables then link must be identity", "\n",""))
-  if(any(family!='Original' && length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='logit'))
+  if(any(family!='Original' && length(as.character(attr(stats::terms(formula.mu),'variable')))>2 && link[1]!='logit'))
     stop(paste("If family is diferent a Original and mu have covariables then link must be logit", "\n",""))
-  if(any(family=='Original'&& length(as.character(attr(terms(formula.mu),'variable')))>2 && link[1]!='log'))
+  if(any(family=='Original'&& length(as.character(attr(stats::terms(formula.mu),'variable')))>2 && link[1]!='log'))
     stop(paste("If family is Original and mu have covariables then link must be log", "\n",""))
-  if(any(length(as.character(attr(terms(formula.sigma),'variable')))==1 && link[2]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.sigma),'variable')))==1 && link[2]!='identity'))
     stop(paste("sigma don't have covariables then link must be identity", "\n",""))
-  if(any(family!='R-S' && length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='log'))
+  if(any(family!='R-S' && length(as.character(attr(stats::terms(formula.sigma),'variable')))>1 && link[2]!='log'))
     stop(paste("If family is diferent a R-S and sigma have covariables then link must be log", "\n",""))
-  if(any(family=='R-S'&& length(as.character(attr(terms(formula.sigma),'variable')))>1 && link[2]!='logit'))
+  if(any(family=='R-S'&& length(as.character(attr(stats::terms(formula.sigma),'variable')))>1 && link[2]!='logit'))
     stop(paste("If family is R-S and sigma have covariables then link must be logit", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p0),'variable')))==1 && link[3]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.p0),'variable')))==1 && link[3]!='identity'))
     stop(paste("p0 don't have covariables then link must be identity", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p0),'variable')))>1 && link[3]!='logit'))
+  if(any(length(as.character(attr(stats::terms(formula.p0),'variable')))>1 && link[3]!='logit'))
     stop(paste("p0 have covariables then link must be logit", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p1),'variable')))==1 && link[4]!='identity'))
+  if(any(length(as.character(attr(stats::terms(formula.p1),'variable')))==1 && link[4]!='identity'))
     stop(paste("p1 don't have covariables then link must be identity", "\n",""))
-  if(any(length(as.character(attr(terms(formula.p1),'variable')))>1 && link[4]!='logit'))
+  if(any(length(as.character(attr(stats::terms(formula.p1),'variable')))>1 && link[4]!='logit'))
     stop(paste("p1 have covariables then link must be logit", "\n",""))
   if(any(optimizer!='nlminb' && optimizer!='optim'))
     stop(paste("optimizer should be 'nlminb' or 'optim'", "\n",""))
-  if(any(length(as.character(attr(terms(formula.random),'variable')))!=2))
+  if(any(length(as.character(attr(stats::terms(formula.random),'variable')))!=2))
     stop(paste("formula.random don't have ~1 and/or group variable", "\n",""))
-  if(any(grep("|",attr(terms(formula.random),'term.labels'))!=1))
+  if(any(grep("|",attr(stats::terms(formula.random),'term.labels'))!=1))
     stop(paste("formula.random don't have symbol '|' for indicate group variable", "\n",""))
   if(any(class(pruning)!="logical"))
     stop(paste("pruning should be a logical object", "\n",""))
   if(any(n.points==0))
     stop(paste("n.points must have Greater than zero", "\n",""))
 
-  quad <- GHQp ::GHQ(n=n.points, ndim=2, pruning=pruning)
+  quad <- GHQp::GHQ(n=n.points, ndim=2, pruning=pruning)
 
   matri<-model.matrix.ZOIP2(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,formula.p1=formula.p1, data=data,formula.random=formula.random)
 
@@ -168,7 +167,7 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
 
 
 
-  tf<-system.time( fit <- nlminb(theta0, llM, Y=matri$y, mat.mu=matri$mat.mu, mat.sigma=matri$mat.sigma,
+  tf<-system.time( fit <- stats::nlminb(theta0, llM, Y=matri$y, mat.mu=matri$mat.mu, mat.sigma=matri$mat.sigma,
                                  mat.p0=matri$mat.p0, mat.p1=matri$mat.p1,inter.ran=matri$inter.ran,
                                  quad=quad, link=link, family=family,
                                  control=list(eval.max=10000,iter.max=10000,trace=0,rel.tol=1e-5,x.tol=1e-3,xf.tol=1e-7),
@@ -197,7 +196,7 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   names(elem.time)<-NULL
 
   result<-list(Fixed_Parameters.mu=NULL,Fixed_Parameters.sigma=NULL,Fixed_Parameters.p0=NULL,Fixed_Parameters.p1=NULL
-               ,Parameters.randoms=NULL,logverosimilitud=NULL,message=NULL,Time=NULL,num.iter=NULL,HM=NULL)
+               ,Parameters.randoms=NULL,logverosimilitud=NULL,message=NULL,Time=NULL,num.iter=NULL,HM=NULL,link=NULL)
 
   result$Fixed_Parameters.mu <- elem.mu
   result$Fixed_Parameters.sigma <- elem.sigma
@@ -209,6 +208,7 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
   result$message <- fit$message
   result$num.iter <- fit$iterations
   result$HM<-HM
+  result$link<-link
 
   result$call <- match.call()
   class(result)<-'ZOIPM'
@@ -224,16 +224,16 @@ model.matrix.ZOIP2 <- function(formula.mu,formula.sigma,formula.p0,formula.p1, d
   stopifnot (class(formula.random) == 'formula')
   #stopifnot (class(formula.random.sigma) == 'formula')
   response <- all.vars(formula.mu)[1]
-  formula.sigma <- as.formula(paste(response, paste(as.character(formula.sigma),
+  formula.sigma <- stats::as.formula(paste(response, paste(as.character(formula.sigma),
                                                     collapse='')))
-  formula.p0 <- as.formula(paste(response, paste(as.character(formula.p0),
+  formula.p0 <- stats::as.formula(paste(response, paste(as.character(formula.p0),
                                                  collapse='')))
-  formula.p1 <- as.formula(paste(response, paste(as.character(formula.p1),
+  formula.p1 <- stats::as.formula(paste(response, paste(as.character(formula.p1),
                                                  collapse='')))
-  mat.mu <- model.matrix(formula.mu, data)
-  mat.sigma <- model.matrix(formula.sigma, data)
-  mat.p0 <- model.matrix(formula.p0, data)
-  mat.p1 <- model.matrix(formula.p1, data)
+  mat.mu <- stats::model.matrix(formula.mu, data)
+  mat.sigma <- stats::model.matrix(formula.sigma, data)
+  mat.p0 <- stats::model.matrix(formula.p0, data)
+  mat.p1 <- stats::model.matrix(formula.p1, data)
 
   inter.ran_aux <- paste0("data$",all.vars(formula.random)[1])
   inter.ran<-as.factor(eval(parse(text=inter.ran_aux)))
@@ -241,7 +241,7 @@ model.matrix.ZOIP2 <- function(formula.mu,formula.sigma,formula.p0,formula.p1, d
   #inter.ran.sigma_aux <- paste0("data$",all.vars(formula.random.sigma)[1])
   #inter.ran.sigma<-as.factor(eval(parse(text=inter.ran.sigma_aux)))
 
-  y <- model.frame(formula.mu, data=data)[, 1]
+  y <- stats::model.frame(formula.mu, data=data)[, 1]
   matri<-list(y=y,mat.mu=mat.mu, mat.sigma=mat.sigma,mat.p0=mat.p0,mat.p1=mat.p1
               ,inter.ran=inter.ran)
   return(matri)
@@ -277,7 +277,7 @@ fit.ZOIPM<-function(matri,link,family,optimizer){
               rep(ifelse(link[3]=='logit',Inf,0.999999999),nparm.p0),rep(ifelse(link[4]=='logit',Inf,0.999999999),nparm.p1))
 
   if (optimizer == 'nlminb') {
-    opt <- nlminb(start=val.inic, objective=ll.ZOIPM,
+    opt <- stats::nlminb(start=val.inic, objective=ll.ZOIPM,
                   y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                   link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$objective
@@ -285,7 +285,7 @@ fit.ZOIPM<-function(matri,link,family,optimizer){
 
   if (optimizer == 'optim') {
 
-    opt <- optim(par=val.inic, fn=ll.ZOIPM,
+    opt <- stats::optim(par=val.inic, fn=ll.ZOIPM,
                  y=y, X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,
                  link=link,family=family,lower=lower.val,upper=upper.val)
     opt$objective <- -opt$value
@@ -401,7 +401,7 @@ llind <- function(i, Y, mat.mu, mat.sigma, mat.p0, mat.p1,
   upper.val<-c(upper.val,Inf,Inf)
 
 
-  opt <- optim(par=c(0,0), fn=integrando,
+  opt <- stats::optim(par=c(0,0), fn=integrando,
                y=y, X.mu=X.mu, X.sigma=X.sigma, X.p0=X.p0, X.p1=X.p1,
                beta1=beta1, beta2=beta2, beta3=beta3, beta4=beta4,
                t1=t1, t2=t2, link=link, family=family,
@@ -467,8 +467,8 @@ integrando <- function(u, y, X.mu,X.sigma, X.p0, X.p1,
     }
 
     temp1 <- sum( dZOIP(x=y, mu=mu, sigma=sigma,p0=p0,p1=p1, family=family, log=TRUE) )
-    temp2<-dnorm(ui[1],mean=0,sd=t1,log=TRUE)
-    temp3<-dnorm(ui[2],mean=0,sd=t2,log=TRUE)
+    temp2<-stats::dnorm(ui[1],mean=0,sd=t1,log=TRUE)
+    temp3<-stats::dnorm(ui[2],mean=0,sd=t2,log=TRUE)
     temp1 + temp2 + temp3 })
   if(log == FALSE) ll <- exp(ll)
   return(ll)

@@ -16,17 +16,14 @@
 #'family =' Original 'beta distribution original parametrization where \eqn{\mu = a}, a parameter of form 1; \eqn{\sigma = b}, b parameter of form 2.
 #'family =' Simplex 'simplex distribution. proposed by Barndorff-Nielsen and Jørgensen (1991)
 #'
-#' @usage dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
-#' pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
-#' rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
 #' @param p vector of probabilities.
 #' @param mu vector of location parameters.
 #' @param sigma vector of scale parameters.
 #' @param p0 parameter of proportion of zeros.
 #' @param p1 Parameter of proportion of ones.
 #' @param family choice of the parameterization or distribution, family = 'R-S' parameterization beta distribution Rigby and Stasinopoulos, 'F-C' distribution Beta parametrization Ferrari and Cribari-Neto, 'Original' Beta distribution classic parameterization, 'Simplex' simplex distribution.
-#' @param log logical; if TRUE, the probabilities of p will be given as log (p).
+#' @param lower.tail logical; if TRUE (default), probabilities will be P [X <= x], otherwise, P [X> x].
+#' @param log.p logical; if TRUE, the probabilities of p will be given as log (p).
 #' @examples
 #' library(ZOIP)
 #' qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
@@ -102,18 +99,18 @@ qZOIP<-function (p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,fami
   if(family != 'Simplex'){
     if(p0>0 && p1>0){
       suppressWarnings(q <- ifelse((p <= (nu/(1 + nu + tau))),
-                                   0, qbeta((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
+                                   0, stats::qbeta((p - (nu/(1 + nu + tau)))/(1/(1 + nu + tau)),
                                             shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE)))
     }else if(p0>0 && p1==0){
-      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, qbeta((p -
+      suppressWarnings(q <- ifelse((p <= (nu/(1 + nu))), 0, stats::qbeta((p -
                                                                      (nu/(1 + nu)))/(1/(1 + nu)), shape1 = a, shape2 = b,
                                                                   lower.tail = TRUE, log.p = FALSE)))
     }else if(p0==0 && p1>0){
-      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, qbeta((p *
+      suppressWarnings(q <- ifelse((p >= (1/(1 + tau))), 1, stats::qbeta((p *
                                                                      (1 + tau)), shape1 = a, shape2 = b, lower.tail = TRUE,
                                                                   log.p = FALSE)))
     }else if(p0==0 && p1==0){
-      suppressWarnings(q <-qbeta(p,shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE))
+      suppressWarnings(q <-stats::qbeta(p,shape1 = a, shape2 = b, lower.tail = TRUE, log.p = FALSE))
     }
   }
   fun_simp_aux1<-function(p){
