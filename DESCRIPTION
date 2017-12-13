@@ -2,8 +2,7 @@ Package: ZOIP
 Title: ZOIP Distribution, ZOIP Regression, ZOIP mixed regression
 Description: The ZOIP() function defines the distributions for proportional data inflated with zeros and/or ones more known, such as the distribution beta and simplex, in addition it allows that have different parameterizations of the beta distribution. The ZOIP() function has four parameters, two of which correspond to the proportion of zeros and some and the other two corresponding to the distribution for proportional data of their choice. The ZOIP package allows for adjustments of regression models for fixed and mixed effects for proportional data inflated with zeros and/or ones.
 Version: 0.1
-Authors@R: person("Juan Camilo", "Diaz", email = "jucdiazza@unal.edu.co", role = c("aut", "cre"))
-Maintainer: Juan Camilo Diaz Zapata <jucdiazza@unal.edu.co>
+Authors@R: person("Juan Camilo", "Diaz Zapata", email = "jucdiazza@unal.edu.co", role = c("aut", "cre"))
 Depends: R (>= 3.2.0)
 License: GPL (>= 2)
 Encoding: UTF-8
