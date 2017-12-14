@@ -59,9 +59,9 @@ formula.random= ~ 1 | Ciudad
 link=c('logit','logit','identity','identity')
 optimizer<-'nlminb'
 
-mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,
-              formula.p1=formula.p1,data=data_sim,formula.random=formula.random,link=link,
-              family=family,optimizer=optimizer,n.points=n.points,pruning=pruning)
-summary(mod)
-
+#mod<-RMM.ZOIP(formula.mu=formula.mu,formula.sigma=formula.sigma,formula.p0=formula.p0,
+#               formula.p1=formula.p1,data=data_sim,formula.random=formula.random,link=link,
+#               family=family,optimizer=optimizer,n.points=n.points,pruning=pruning)
+#summary(mod)
+print('execute commented code last, thanks.')
 }
