@@ -29,8 +29,8 @@ The dZOIP function defines the probability density function of the ZOIP distribu
 x has ZOIP distribution with shape parameters "\eqn{\mu}", scale "\eqn{\sigma}", proportion of zeros "\eqn{p0}" and proportion of ones "\eqn{ p1} ",
 has density: \eqn{p0} if \eqn{x = 0}, \eqn{p1} if \eqn{x = 1}, \eqn{(1-p0-p1) f (x; \mu, \sigma)} yes \eqn{0 <x <1}.
 
-where \eqn{p0 \geq 0} represents the probability that \eqn{x = 0, p1 \geq 0} represents the probability
-that \eqn{x = 1, 0 \leq p0 + p1 \leq 1} and \eqn{f (x; \mu, \sigma)} represents some of the functions of
+where \eqn{p0 \ge 0} represents the probability that \eqn{x = 0, p1 \ge 0} represents the probability
+that \eqn{x = 1, 0 \le p0 + p1 \le 1} and \eqn{f (x; \mu, \sigma)} represents some of the functions of
 probability density for proportional data, such as the beta distribution with its different parameterizations
 and the simplex distribution.
 
