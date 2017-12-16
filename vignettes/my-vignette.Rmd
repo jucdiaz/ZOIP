@@ -1,5 +1,5 @@
 ---
-title: "Distribucion ZOIP"
+title: "Distribución ZOIP"
 author: "Juan Camilo Diaz Zapata"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -9,11 +9,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Distribucion ZOIP
+## Distribución ZOIP
 
-La funcion ZOIP() define las distribuciones para datos proporcionales inflados con ceros y unos mas conocidas, como la distribucion beta y simplex, ademas permite que se tengan distintas parametrizaciones de la distribucion beta.La funcion ZOIP() posee 4 parametros dos de ellos corresponden a la porporcion de ceros y unos que quiere que posea la distribucion para datos proporcionales de su eleccion.
+La función ZOIP () define las distribuciones para datos proporcionales inflados con ceros y unos más conocidas, como la distribución beta y simplex, además permite que se tengan distintas parametrizaciones de la distribución beta. La función ZOIP () posee 4 parámetros dos de ellos corresponden a la proporción de ceros y unos que quiere que posea la distribución para datos proporcionales de su elección.
     
-La distribucion para datos proporcionales en cero y/o uno se compone de la mezcla de dos distribuciones, una parte dada por una distribucion degenerada en cero o uno y la otra por la densidad de una distribucion para datos proporcionales, como las presentadas anteriormente, se dice que $y \sim ZOIP(\mu,\sigma, p_0, p_1)$ si sigue la funcion de desnsidad de probabilidad dada por:
+La distribución para datos proporcionales en cero y/o uno se compone de la mezcla de dos distribuciones, una parte dada por una distribución degenerada en cero o uno y la otra por la densidad de una distribución para datos proporcionales, como las presentadas anteriormente, se dice que $y \sim ZOIP(\mu,\sigma, p_0, p_1)$ si sigue la función de densidad de probabilidad dada por:
 \[
 g(y;\mu,\sigma, p_{0}, p_{1})=
 \begin{cases}
@@ -23,25 +23,25 @@ p_{1} & \text{Si}\ y=1,\\
 \end{cases}
 \]
 
-donde $p_{0} \geq 0$ representa la probabilidad que $y=0$, $p_{1} \geq 0$ representa la probabilidad de que $y=1$, $0\leq p_{0}+p_{1}\leq 1$ y $f(y;\mu,\phi)$ representa algunas de las funciones de densidad de probabilidad para datos proporcionales, como la distribucion beta y simplex.
+donde $p_{0} \geq 0$ representa la probabilidad que $y=0$, $p_{1} \geq 0$ representa la probabilidad de que $y=1$, $0\leq p_{0}+p_{1}\leq 1$ y $f(y;\mu,\phi)$ representa algunas de las funciones de densidad de probabilidad para datos proporcionales, como la distribución beta y simplex.
 
-## Instalacion paquete ZOIP
+## Instalación paquete ZOIP
 
-Se debe ejecutar las siguientes lineas de codigo para instalar el paquete *ZOIP* en R.
+Se debe ejecutar las siguientes líneas de código para instalar el paquete *ZOIP* en R.
 
 ```{r eval=FALSE}
 if (!require('devtools')) install.packages('devtools') devtools::install_github('jucdiaz/ZOIP', force=TRUE)
 library(ZOIP)
 ```
-## Parametros Comunes de la distribucion ZOIP en el paquete ZOIP.
+## Parámetros Comunes de la distribución ZOIP en el paquete ZOIP.
 
-La funcion ZOIP esta compuesta por varios parametros (mu, sigma, p0, p1, Family) que seran descritos a continuacion:
+La función ZOIP está compuesta por varios parámetros (mu, sigma, p0, p1, Family) que serán descritos a continuación:
 
 #### family
 
-Es el parametro que describe la distribucion y/o parametrizacion a utilizar en la funcion ya sea *dZOIP, pZOIP, qZOIP, rZOIP*
+Es el parámetro que describe la distribución y/o parametrización a utilizar en la función ya sea *dZOIP, pZOIP, qZOIP, rZOIP*
 
-1. **family='R-S'** utiliza la distribucion beta con parametrizacion beta Rigby y Stasinopoulos (2008), cuya funcion de densidad de probabilidad de la distribucion beta con par\'{a}metros $\mu$ y $\sigma$ dada por:
+1. **family='R-S'** utiliza la distribución beta con parametrización beta Rigby y Stasinopoulos (2005), cuya función de densidad de probabilidad de la distribución beta con par\'{a}metros $\mu$ y $\sigma$ dada por:
 
 \[
 f(y;\mu,\sigma)=B(\mu,\sigma)y^{\mu((1-\sigma^2)/\sigma^2)-1}(1-y)^{(1-\mu)((1-\sigma^2)/\sigma^2)-1} \quad; 0<y<1 
@@ -49,26 +49,26 @@ f(y;\mu,\sigma)=B(\mu,\sigma)y^{\mu((1-\sigma^2)/\sigma^2)-1}(1-y)^{(1-\mu)((1-\
 
 donde $B(\mu,\sigma)=\frac{\Gamma((1-\sigma^2)/\sigma^2)}{\Gamma(\mu((1-\sigma^2)/\sigma^2))\Gamma((1-\mu)((1-\sigma^2)/\sigma^2))},$
 
-donde $0<\mu<1$ y $0<\sigma<1$ este ultimo puede ser interpretado como un parametro de dispersion de *y*.
+donde $0<\mu<1$ y $0<\sigma<1$ este último puede ser interpretado como un parámetro de dispersión de *y*.
 
-2. **family='F-C'** utiliza la distribucion Beta parametrizacion Ferrari y Cribari-Neto (2004), donde el parametro sigma sera igual a $\phi$, la funcion de distribucion beta tendra los parametos $\mu$ y $\phi$ donde $\mu$ corresponde a la media de la distribucion. Si $y \sim Be(\mu,\phi)$ la funcion de densidad de probabilidad de la distribucion esta dada por:
+2. **family='F-C'** utiliza la distribución beta parametrización Ferrari y Cribari-Neto (2004), donde el parámetro sigma será igual a $\phi$, la función de distribución beta tendrá los parámetros $\mu$ y $\phi$ donde $\mu$ corresponde a la media de la distribución. Si $y \sim Be(\mu,\phi)$ la función de densidad de probabilidad de la distribución está dada por:
 
 \[
 f(y;\mu,\phi)=\frac{\Gamma(\phi)}{\Gamma(\mu\phi)\Gamma((1-\mu)\phi)}y^{\mu\phi-1}(1-y)^{(1-\mu)\phi-1} \quad;\quad  0<y<1 
 \]
 
-donde $0<\mu<1$ y $\phi>0$, el parametro $\phi$ es interpretado como un parametro de precision. Cuando $\mu=1/2$ la distribucion es simetrica y si $\mu\neq1/2$ es asimetrica, ademas cuando $\mu=1/2$ y $\phi=2$ se convierte en la distribucion uniforme y para valores mas grandes de $\phi$ la varianza de $\mu$ es mas pequenia.
+donde $0<\mu<1$ y $\phi>0$, el parámetro $\phi$ es interpretado como un parámetro de precisión. Cuando $\mu=1/2$ la distribución es simétrica y si $\mu\neq1/2$ es asimétrica, además cuando $\mu=1/2$ y $\phi=2$ se convierte en la distribución uniforme y para valores más grandes de $\phi$ la varianza de $\mu$ es más pequeña.
 
-3. **family='Original'** utiliza la distribucion beta parametrizacion original donde mu=$p$, $p$ parametro de forma 1; sigma=$q$, $q$ parametro de forma 2. 
-Si una variable aleatoria $y$ tiene distribucion beta con parametros $p$ y $q$ se acostumbra a denotarla por $y \sim Be(p,q)$ y La funcion de densidad de probabilidad de la distribucion es dada por:
+3. **family='Original'** utiliza la distribución beta parametrización original donde mu=$p$, $p$ parámetro de forma uno; sigma=$q$, $q$ parámetro de forma dos. 
+Si una variable aleatoria $y$ tiene distribución beta con parámetros $p$ y $q$ se acostumbra a denotarla por $y \sim Be(p,q)$ y La función de densidad de probabilidad de la distribución es dada por:
 
 \[
 f(y;p,q)=\frac{\Gamma(p+q)}{\Gamma(p)\Gamma(q)}y^{p-1}(1-y)^{q-1} \quad;\quad  0<y<1 
 \]
 
-donde $p>0$, $q>0$ y $\Gamma(\cdot)$ es la funcion gamma.
+donde $p>0$, $q>0$ y $\Gamma(\cdot)$ es la función gamma.
 
-4. **family='simplex'** utiliza la distribucion simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991). la distribucion simplex que es introducida por Barndorff-Nielsen and Jørgensen (1991) es un caso particular de los modelos de dispersion propuestos por Jørgensen (1997), cuya funcion de densidad de probabilidad depende de los parametros $\mu$ y $\Sigma^{2}$ denotado por $S(\mu, \sigma^{2})$ y esta dado por:
+4. **family='simplex'** utiliza la distribución simplex. propuesta por Barndorff-Nielsen and Jørgensen (1991). la distribución simplex que es introducida por Barndorff-Nielsen and Jørgensen (1991) es un caso particular de los modelos de dispersión propuestos por Jørgensen (1997), cuya función de densidad de probabilidad depende de los parámetros $\mu$ y $\Sigma^{2}$ denotado por $S(\mu, \sigma^{2})$ y está dado por:
 
 \[
 f(y;\mu,\sigma^2)=\left\{2\pi\sigma^2[y(1-y)]^3\right\}^{-1/2}exp\left\{-\frac{(y-\mu)^2}{2\sigma^2y(1-y)\mu^2(1-\mu)^2}\right\}\quad;\quad 0<y<1
@@ -79,38 +79,38 @@ donde $0<y<1$, $0<\mu<1$ y $\sigma^{2}>0$.
 #### mu
 Familia | Significado de mu
 ----------------- | -------------------
-R-S| Media de la distribucion
-F-C | Media de la distribucion
-Original | Parametro de forma p
-Simplex | Media de la distribucion
+R-S| Media de la distribución
+F-C | Media de la distribución
+Original | Parámetro de forma p
+Simplex | Media de la distribución
 
 #### sigma
 Familia | Significado de sigma
 ----------------- | -------------------
-R-S| Parametro de dispersion
-F-C | Parametro de presicion
-Original | Parametro de forma q
-Simplex | Parametro de dispersion
+R-S| Parámetro de dispersión
+F-C | Parámetro de precisión
+Original | Parámetro de forma q
+Simplex | Parámetro de dispersión
 
 #### p0
 Familia | Significado de p0
 ----------------- | -------------------
-R-S| Parametro de proporcion de ceros en la distribucion ZOIP
-F-C | Parametro de proporcion de ceros en la distribucion ZOIP
-Original | Parametro de proporcion de ceros en la distribucion ZOIP
-Simplex | Parametro de proporcion de ceros en la distribucion ZOIP
+R-S| Parámetro de proporción de ceros en la distribución ZOIP
+F-C | Parámetro de proporción de ceros en la distribución ZOIP
+Original | Parámetro de proporción de ceros en la distribución ZOIP
+Simplex | Parámetro de proporción de ceros en la distribución ZOIP
 
 #### p1
 Familia | Significado de p0
 ----------------- | -------------------
-R-S| Parametro de proporcion de unos en la distribucion ZOIP
-F-C | Parametro de proporcion de unos en la distribucion ZOIP
-Original | Parametro de proporcion de unos en la distribucion ZOIP
-Simplex | Parametro de proporcion de unos en la distribucion ZOIP
+R-S| Parámetro de proporción de unos en la distribución ZOIP
+F-C | Parámetro de proporción de unos en la distribución ZOIP
+Original | Parámetro de proporción de unos en la distribución ZOIP
+Simplex | Parámetro de proporción de unos en la distribución ZOIP
 
-## Funcion dZOIP()
+## Función dZOIP()
 
-La funcion dZOIP define la funcion de densidad de probabilidad de la distribucion ZOIP. posee la siguiente sintaxis por default
+La función dZOIP define la función de densidad de probabilidad de la distribución ZOIP. posee la siguiente sintaxis por default
 
 ```{r eval=FALSE}
 dZOIP(x, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S', log = FALSE)
@@ -127,9 +127,9 @@ dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
 dZOIP(x=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
 dZOIP(x=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex',log = FALSE)
 ```
-## Funcion pZOIP()
+## Función pZOIP()
 
-La funcion pZOIP define la funcion de distribucion acumulada de la distribucion ZOIP. posee la siguiente sintaxis por default
+La función pZOIP define la función de distribución acumulada de la distribución ZOIP. posee la siguiente sintaxis por default
 
 ```{r eval=FALSE}
 pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
@@ -137,14 +137,14 @@ pZOIP(q, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lo
 algunos ejemplos de su uso son dados por:
 
 ```{r}
-pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
-pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
-pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
-pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex',log = FALSE)
+pZOIP(q=0.5, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S', log = FALSE)
+pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C', log = FALSE)
+pZOIP(q=0.5, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original', log = FALSE)
+pZOIP(q=0.5, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex', log = FALSE)
 ```
-## Funcion qZOIP()
+## Función qZOIP()
 
-La funcion qZOIP define la funcion cuantil de la distribucion ZOIP. posee la siguiente sintaxis por default
+La función qZOIP define la función cuantil de la distribución ZOIP. posee la siguiente sintaxis por default
 
 ```{r eval=FALSE}
 qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lower.tail = TRUE, log.p = FALSE)
@@ -153,14 +153,14 @@ qZOIP(p, mu = 0.5, sigma = 0.1, p0 = 0.08333333, p1 = 0.08333333,family='R-S',lo
 algunos ejemplos de su uso son dados por:
 
 ```{r}
-qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S',log = FALSE)
-qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C',log = FALSE)
-qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original',log = FALSE)
-qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex',log = FALSE)
+qZOIP(p=0.7, mu = 0.2, sigma = 0.5, p0 = 0.2, p1 = 0.2,family='R-S', log = FALSE)
+qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='F-C', log = FALSE)
+qZOIP(p=0.7, mu = 0.6, sigma = 2.4, p0 = 0.2, p1 = 0.2,family='Original', log = FALSE)
+qZOIP(p=0.7, mu = 0.2, sigma = 3, p0 = 0.2, p1 = 0.2,family='Simplex', log = FALSE)
 ```
-## Funcion qZOIP()
+## Función rZOIP()
 
-la funcion rZOIP define la funcion generadora de numeros aleatorios para la distribucion ZOIP.posee la siguiente sintaxis por default
+la función rZOIP define la función generadora de números aleatorios para la distribución ZOIP. Posee la siguiente sintaxis por default
 
 ```{r eval=FALSE}
 rZOIP(n, mu = 0.5, sigma = 0.1,p0 = 0.08333333, p1 = 0.08333333,family='R-S')
