@@ -1,4 +1,9 @@
 # ZOIP
+If you want to install the version of the package available in the CRAN of R, you need to copy the next code into your R console
+```s
+install.packages("ZOIP")
+```
+
 If you want to install it, you need to copy the next code into your R console
 
 ```s
