@@ -131,6 +131,9 @@ RM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,l
   X.p1 <- matri$mat.p1
   y <- matri$y
 
+  opt$par2[opt$par>1.000000e-4]<-opt$par[opt$par>1.000000e-4]
+  opt$par2[opt$par<=1.000000e-4]<-1.000000e-4
+
   HM<-numDeriv::hessian(func=ll.ZOIP2,x=opt$par,y=y,method='Richardson', X.mu=X.mu, X.sigma=X.sigma,X.p0=X.p0,X.p1=X.p1,link=link,family=family)
 
   i=1
