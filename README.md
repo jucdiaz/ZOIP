@@ -12,5 +12,5 @@ devtools::install_github("jucdiaz/ZOIP", force = TRUE)
 library(ZOIP) # Carga el paquete
 ```
 
-![Alt text](https://github.com/jucdiaz/LatinR/blob/master/POSTER/Logo_ZOIP.jpg?raw=true "Title")
+![Alt text](https://github.com/jucdiaz/LatinR/blob/master/POSTER/Logo_ZOIP.JPG?raw=true)
 
