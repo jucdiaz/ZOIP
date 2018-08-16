@@ -12,5 +12,7 @@ devtools::install_github("jucdiaz/ZOIP", force = TRUE)
 library(ZOIP) # Carga el paquete
 ```
 
-![Alt text](https://github.com/jucdiaz/LatinR/blob/master/POSTER/Logo_ZOIP.JPG?raw=true)
-
+### HexSticker ZOIP
+<p align="center">
+  <img src="https://github.com/jucdiaz/LatinR/blob/master/POSTER/Logo_ZOIP.JPG?raw=true" alt="HexSticker ZOIP"/>
+</p>
