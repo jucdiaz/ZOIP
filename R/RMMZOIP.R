@@ -170,7 +170,11 @@ RMM.ZOIP<-function(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,data,
                                  control=list(eval.max=10000,iter.max=10000,trace=0,rel.tol=1e-5,x.tol=1e-3,xf.tol=1e-7),
                                  lower=lower.val,upper=upper.val)
   )
-  HM<-numDeriv::hessian(func=llM,x=fit$par,method='Richardson',
+
+  fit$par2[fit$par>1.000000e-4]<-fit$par[fit$par>1.000000e-4]
+  fit$par2[fit$par<=1.000000e-4]<-1.000000e-4
+
+  HM<-numDeriv::hessian(func=llM,x=fit$par2,method='Richardson',
                         Y=matri$y, mat.mu=matri$mat.mu, mat.sigma=matri$mat.sigma,
                         mat.p0=matri$mat.p0, mat.p1=matri$mat.p1,inter.ran=matri$inter.ran,
                         quad=quad, link=link, family=family)
